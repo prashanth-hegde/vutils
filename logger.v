@@ -1,4 +1,4 @@
-module logger 
+module vutils 
 
 import time
 
@@ -8,7 +8,7 @@ import time
 *
 ******************************************************************************/
 
-enum LogLevel {
+pub enum LogLevel {
 	trace
 	debug
 	info
@@ -17,8 +17,8 @@ enum LogLevel {
 	disabled // should be the last option
 }
 
-struct Log {
-mut:
+pub struct Log {
+pub mut:
 	level LogLevel = .info
 }
 
@@ -56,5 +56,3 @@ pub fn (l Log) warn(msg string) {
 		println('${time.now()} ${symbol} ${msg}')
 	}
 }
-
-// pub const log = Log{.info}

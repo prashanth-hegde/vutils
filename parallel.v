@@ -1,4 +1,4 @@
-module parallel
+module vutils
 
 import sync
 import math

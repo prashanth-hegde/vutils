@@ -1,4 +1,4 @@
-module parallel
+module vutils
 
 import rand
 import time
