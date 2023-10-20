@@ -48,21 +48,26 @@ struct Task[T] {
 // Any error handling should have happened within the worker function
 pub fn map_parallel[T, R](input []T, max_workers int, worker fn (T) R) []R {
 	mut wg := sync.new_waitgroup()
-	mut output := []R{len: input.len}
+	mut output := []R{cap: input.len}
+	mut output_ref := &output
 	wg.add(input.len)
+
 	// https://github.com/vlang/v/issues/19609
-	// ch := chan Task[T]{}
+	// ch := chan Task[T]{cap: input.len}
+	ch := chan T{}
 
 	// create workers to handle the load
 	workers := math.min(math.max(1, max_workers), runtime.nr_cpus())
 	for _ in 0 .. workers {
-		// spawn fn [ch, worker, mut wg, mut output] [T]() {
-		// 	for {
-		// 		task := <-ch or { break }
-		// 		output[task.idx] = worker(task.task)
-		// 		wg.done()
-		// 	}
-		// }()
+		spawn fn [ch, worker, mut wg, mut output_ref] [T, R]() {
+			for {
+				task := <-ch or { break }
+				op := worker(task)
+				// output << worker(task)
+				output_ref << op
+				wg.done()
+			}
+		}()
 	}
 
 	// put the input into the channel
@@ -71,9 +76,12 @@ pub fn map_parallel[T, R](input []T, max_workers int, worker fn (T) R) []R {
 	// 	ch <- task
 	// }
 
-	// // wait for all tasks to complete
-	// wg.wait()
-	// ch.close()
+	for inp in input {
+		ch <- inp
+	}
 
+	// wait for all tasks to complete
+	wg.wait()
+	ch.close()
 	return output
 }
