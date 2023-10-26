@@ -18,6 +18,6 @@ fn test_tokenize() {
 
 	for test_case in test_cases {
 		actual := tokenize(test_case.input)
-		assert actual.len == test_case.expected.len, '${test_case.input}'
+		assert actual == test_case.expected, '${test_case.input}'
 	}
 }
