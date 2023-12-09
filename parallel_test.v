@@ -2,7 +2,6 @@ module vutils
 
 import rand
 import time
-import math
 
 fn test_run_parallel() {
 	count := []int{len: 10, init: index}

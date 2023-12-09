@@ -53,8 +53,7 @@ pub fn map_parallel[T, R](input []T, max_workers int, worker fn (T) R) []R {
 	wg.add(input.len)
 
 	// https://github.com/vlang/v/issues/19609
-	// ch := chan Task[T]{cap: input.len}
-	ch := chan T{}
+	ch := chan Task[T]{}
 
 	// create workers to handle the load
 	workers := math.min(math.max(1, max_workers), runtime.nr_cpus())
@@ -62,22 +61,16 @@ pub fn map_parallel[T, R](input []T, max_workers int, worker fn (T) R) []R {
 		spawn fn [ch, worker, mut wg, mut output_ref] [T, R]() {
 			for {
 				task := <-ch or { break }
-				op := worker(task)
-				// output << worker(task)
-				output_ref << op
+				output_ref << worker(task.task)
 				wg.done()
 			}
 		}()
 	}
 
 	// put the input into the channel
-	// for idx, inp in input {
-	// 	task := Task[T]{idx, inp}
-	// 	ch <- task
-	// }
-
-	for inp in input {
-		ch <- inp
+	for idx, inp in input {
+		task := Task[T]{idx, inp}
+		ch <- task
 	}
 
 	// wait for all tasks to complete
