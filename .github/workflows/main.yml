@@ -11,25 +11,31 @@ defaults:
 jobs:
   build_and_test:
     name: >
-      Build and test a ${{ matrix.build }} version of Lamscript on
-      ${{ matrix.os }} with ${{ matrix.compiler }}.
-    runs-on: ${{ matrix.os }}
+      vutils-${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        compiler: [ g++-10 ]
-        build: [Release, Debug]
-        include:
-          - os: ubuntu-latest
-            target: Linux
-          - os: macos-latest
-            target: Macos
+        settings:
+          - host: macos-latest
+            target: x86_64-apple-darwin
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          # - host: ubuntu-latest
+            # target: x86_64-unknown-linux-musl
+          - host: macos-latest
+            target: aarch64-apple-darwin
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run the projects setup.
+      - name: Bootstrap V
         run: ./build-scripts/bootstrap-v.sh
         shell: bash
+      
+      # - name: Release ${{ matrix.settings.target }}
+        # uses: actions/upload-artifact@v4
 
