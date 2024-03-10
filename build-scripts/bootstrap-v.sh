@@ -6,6 +6,6 @@ make
 
 # Build the projects
 mkdir bin 
-v -prod -o bin/epoch src/epoch/epoch.v
-v -prod -r bin/loop src/loop/loop.v
-v -prod -r bin/urlencode src/urlencode/urlencode.v
+v -prod -o bin/epoch src/utils/epoch.v
+v -prod -r bin/loop src/utils/loop.v
+v -prod -r bin/urlencode src/utils/urlencode.v
