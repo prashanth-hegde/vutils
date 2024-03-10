@@ -1,4 +1,4 @@
-module vutils
+module common
 
 struct TokenizerTestCase {
 	input 		string 
