@@ -36,6 +36,9 @@ jobs:
         run: ./build-scripts/bootstrap-v.sh
         shell: bash
       
-      # - name: Release ${{ matrix.settings.target }}
-        # uses: actions/upload-artifact@v4
+      - name: Release ${{ matrix.settings.target }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vutils-${{ matrix.settings.target }}
+          path: bin/vutils.tgz
 
