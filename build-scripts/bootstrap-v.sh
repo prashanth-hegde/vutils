@@ -3,6 +3,7 @@ git clone --depth 1 --branch master https://github.com/vlang/v.git
 cd v 
 make 
 ./v symlink
+cd ..
 
 # Build the projects
 mkdir bin 
