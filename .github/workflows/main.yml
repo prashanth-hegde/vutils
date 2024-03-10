@@ -29,10 +29,10 @@ jobs:
             target: aarch64-unknown-linux-gnu
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Bootstrap V
+      - name: Build
         run: ./build-scripts/bootstrap-v.sh
         shell: bash
       
@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vutils-${{ matrix.settings.target }}
-          path: bin/vutils.tgz
+          path: vutils.tgz
 
