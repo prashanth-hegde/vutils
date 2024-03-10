@@ -1,10 +1,10 @@
-import vutils 
+import common 
 import cli { Command, Flag, }
 import os
 import arrays { join_to_string }
 import time
 
-const log := &vutils.Log{.info}
+const log := &common.Log{.info}
 const version := '0.0.1'
 
 fn loop_until(cmd Command) ! {
@@ -12,7 +12,7 @@ fn loop_until(cmd Command) ! {
     (*log).level = .debug
   }
   parse_duration := fn(dur string) !u32 {
-    dur_tokens := vutils.find_groups(r'(\d+)([smh])', dur)
+    dur_tokens := common.find_groups(r'(\d+)([smh])', dur)
     if dur_tokens.len != 2 {
       return error('invalid duration $dur, please check your input')
     }
