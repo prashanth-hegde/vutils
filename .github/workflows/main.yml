@@ -36,10 +36,18 @@ jobs:
         run: ./build-scripts/bootstrap-v.sh
         shell: bash
       
-      - name: Release ${{ matrix.settings.target }}
+      - name: CreateRelease
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body_path: chanelog.md
+      
+      - name: UploadArtifacts ${{ matrix.settings.target }}
         uses: actions/upload-release-asset@v1
         with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_name: vutils-${{ matrix.settings.target }}
           asset_path: bin.tar.gz
           asset_content_type: application/gzip
-
