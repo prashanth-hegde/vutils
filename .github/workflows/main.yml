@@ -37,8 +37,9 @@ jobs:
         shell: bash
       
       - name: Release ${{ matrix.settings.target }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-release-asset@v1
         with:
-          name: vutils-${{ matrix.settings.target }}
-          path: bin/
+          asset_name: vutils-${{ matrix.settings.target }}
+          asset_path: bin.tar.gz
+          asset_content_type: application/gzip
 
