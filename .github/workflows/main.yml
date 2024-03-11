@@ -50,7 +50,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_name: vutils-${{ matrix.settings.target }}
-          asset_path: bin.tar.gz
+          asset_path: bin.tgz
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ github.token }}
