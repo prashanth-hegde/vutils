@@ -43,6 +43,8 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body_path: chanelog.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       
       - name: UploadArtifacts ${{ matrix.settings.target }}
         uses: actions/upload-release-asset@v1
@@ -51,3 +53,5 @@ jobs:
           asset_name: vutils-${{ matrix.settings.target }}
           asset_path: bin.tar.gz
           asset_content_type: application/gzip
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
