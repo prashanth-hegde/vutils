@@ -2,7 +2,7 @@ name: Cross Compile releases
 
 on:
   push:
-    branches: [ main, cicd ]
+    tags: [ '*' ]
 
 defaults:
   run:
@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vutils-${{ matrix.settings.target }}
-          path: vutils.tgz
+          path: bin/
 
