@@ -1,0 +1,46 @@
+name: Cross Compile releases 
+
+on:
+  push:
+    tags: [ '*' ]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build_and_test:
+    name: >
+      vutils-${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: macos-latest
+            target: x86_64-apple-darwin
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          # - host: ubuntu-latest
+            # target: x86_64-unknown-linux-musl
+          - host: macos-latest
+            target: aarch64-apple-darwin
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: ./build-scripts/bootstrap-v.sh
+        shell: bash
+      
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bin.tgz
+          asset_name: vutils-${{ matrix.settings.target }}.tgz
+          tag: ${{ github.ref }}
+          overwrite: true

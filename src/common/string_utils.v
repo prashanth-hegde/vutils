@@ -1,4 +1,4 @@
-module vutils
+module common
 import datatypes { Stack }
 
 const quot_chars := [`'`, `"`]
