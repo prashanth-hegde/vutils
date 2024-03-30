@@ -10,5 +10,7 @@ mkdir bin
 v -prod -o bin/epoch src/utils/epoch.v
 v -prod -o bin/loop src/utils/loop.v
 v -prod -o bin/urlencode src/utils/urlencode.v
+v -prod -o bin/media src/media/media.v
+v -prod -o bin/update src/update
 
 tar -czvf bin.tgz bin/*
