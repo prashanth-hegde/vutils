@@ -15,7 +15,7 @@ fn set_logger(cmd Command) Log {
 }
 
 fn file_ext(filename string) ?string {
-  return filename[(filename.index_last('.')?+1) .. ]
+  return filename[(filename.last_index('.')?+1) .. ]
 }
 
 fn replace_file_extension(filename string, new_ext string) string {
@@ -24,7 +24,7 @@ fn replace_file_extension(filename string, new_ext string) string {
 }
 
 fn replace_file_name(filename string, new_name string, append_to_basename bool) string {
-	basename := filename[ .. (filename.index_last('.') or { filename.len })]
+	basename := filename[ .. (filename.last_index('.') or { filename.len })]
 	new_filename := if append_to_basename {
 		basename + new_name
 	} else {
