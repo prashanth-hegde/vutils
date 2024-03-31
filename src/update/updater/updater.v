@@ -58,7 +58,7 @@ pub fn (rel Release) get_asset(asset_os string, arch string) !string {
 fn get_os_arch_from_release(rel_name string) !(string, string) {
 	mut os_ := ''
 	mut arch_ := ''
-	if rel_name.contains('linux') && !rel_name.contains('musl') {
+	if rel_name.contains('linux') {
 		os_ = 'linux'
 	} else if rel_name.contains_any_substr(['darwin', 'mac']) {
 		os_ = 'mac'
@@ -128,7 +128,9 @@ fn download_and_extract(asset_url string) ! {
 		return error('unable to download ${asset_url}, ${err}')
 	}
 	os.execute_opt('tar -xzf "${asset_name}" -C "${tmp_dir}"') or {
-		return error('unable to extract ${asset_name}, ${err}')
+		os.execute_opt('tar -xf "${asset_name}" -C "${tmp_dir}"') or {
+			return error('unable to extract ${asset_name}, ${err}')
+		}
 	}
 	updater.log.debug('extracted contents to ${tmp_dir}')
 
@@ -136,7 +138,7 @@ fn download_and_extract(asset_url string) ! {
 	target_dir := os.join_path(os.home_dir(), 'bin')
 	os.walk(tmp_dir, fn [target_dir] (path string) {
 		if os.is_executable(path) {
-			updater.log.info('downloaded ${os.base(path)}')
+			updater.log.info('updated ${os.base(path)}')
 			os.mv(path, target_dir) or {
 				updater.log.error('unable to move ${path} to ${target_dir}, ${err}')
 			}

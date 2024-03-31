@@ -1,3 +1,5 @@
+# set -x 
+
 # if command v is not present 
 if ! command -v v > /dev/null 2>&1; then
   git clone --depth 1 --branch master https://github.com/vlang/v.git
@@ -16,5 +18,6 @@ v -prod -o bin/loop $PWD/src/utils/loop.v
 v -prod -o bin/urlencode $PWD/src/utils/urlencode.v
 v -prod -o bin/media $PWD/src/media/media.v
 v -prod -o bin/update $PWD/src/update
+v -prod -o bin/paths $PWD/src/utils/paths.v
 
 tar -czvf bin.tgz bin/*
