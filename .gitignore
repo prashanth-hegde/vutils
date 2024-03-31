@@ -9,6 +9,7 @@ vutils
 
 # Ignore binary output folders
 bin/
+bin.tgz
 
 # Ignore common editor/system specific metadata
 .DS_Store
