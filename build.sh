@@ -8,7 +8,6 @@ if ! command -v v > /dev/null 2>&1; then
 fi
 
 # Build the projects
-# if directory bin is not present 
 if [ ! -d bin ]; then
   mkdir bin
 fi
