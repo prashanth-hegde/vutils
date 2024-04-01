@@ -168,11 +168,11 @@ pub fn updater(appname string) ! {
 // check_curl_tar checks if curl and tar are installed
 pub fn check_curl_tar() ! {
 	updater.log.debug('checking curl and tar')
-	if os.system('which curl > /dev/null 2>&1') != 0 {
+	os.execute_opt('which curl') or {
 		return error('curl is not installed')
 	}
 
-	if os.system('which tar > /dev/null 2>&1') != 0 {
+	os.execute_opt('which tar') or {
 		return error('tar is not installed')
 	}
 }

@@ -19,5 +19,6 @@ v -prod -o bin/urlencode $PWD/src/utils/urlencode.v
 v -prod -o bin/media $PWD/src/media/media.v
 v -prod -o bin/update $PWD/src/update
 v -prod -o bin/paths $PWD/src/utils/paths.v
+v -prod -o bin/filecache $PWD/src/filecache
 
 tar -czvf bin.tgz bin/*

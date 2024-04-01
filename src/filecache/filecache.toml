@@ -1,0 +1,19 @@
+dirs = [
+  '$HOME/dev',
+  '/mnt/passport/Series',
+  '/mnt/passport/Movies',
+]
+
+ignore = [
+  'build',
+  'bin',
+  'node_modules',
+  '.git',
+  '.idea',
+  '.gradle',
+  '.DS_Store',
+]
+
+[cache]
+  enabled = true
+  dir = '$HOME/.cache/fzf'
