@@ -28,12 +28,12 @@ fn main() {
 				(*filecache.log).level = .debug
 			}
 
-			filecache.check_fd()!
+			fd_path := filecache.check_fd()!
 
 			if cmd.flags.get_bool('forever') or { false } {
-				filecache.run_forever()!
+				filecache.run_forever(fd_path)!
 			} else {
-				filecache.reload_cache()!
+				filecache.reload_cache(fd_path)!
 			}
 		}
 	}
