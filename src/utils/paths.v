@@ -95,7 +95,7 @@ fn main() {
 	]
 
 	mut paths := default_paths.clone()
-	paths << app_paths
+	paths << get_app_paths(app_paths)
 	paths << get_java_paths()
 	paths << get_custom_paths()
 
