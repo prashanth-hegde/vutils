@@ -28,8 +28,7 @@ fn main() {
       }
 			updater.check_curl_tar()!
       updater.check_target_dir()!
-			app_name := cmd.args[0] or { '' }
-			updater.updater(app_name)!
+			updater.update_all(cmd.args)
 		}
     commands: [
       Command{

@@ -148,7 +148,7 @@ fn download_and_extract(asset_url string) ! {
 	updater.log.debug('removed temp dir ${tmp_dir}')
 }
 
-pub fn updater(appname string) ! {
+fn updater(appname string) ! {
 	updater.log.debug('sysname = ${os.uname()}')
 	if appname != '' {
 		updater.log.info('updating ${appname}')
@@ -160,6 +160,15 @@ pub fn updater(appname string) ! {
 		download_and_extract(asset_url)!
 	} else {
 		updater.log.info('updating all apps')
+	}
+}
+
+pub fn update_all(appnames []string) {
+	all_apps := if appnames.len == 0 { apps.keys() } else { appnames }
+	for app in all_apps {
+		updater(app) or {
+			updater.log.error('unable to update ${app}, ${err}')
+		}
 	}
 }
 
