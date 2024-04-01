@@ -1,5 +1,5 @@
 import os
-import arrays
+import common { resolve_path }
 
 const home = os.home_dir()
 
@@ -25,6 +25,18 @@ fn get_app_paths(app_root []string) []string {
 		}
 	}
 	return paths
+}
+
+fn get_custom_paths() []string {
+	custom_path_config := resolve_path('~/.config/paths')
+	return if os.exists(custom_path_config) {
+		lines := os.read_lines(custom_path_config) or {[]}
+		lines
+			.map(it.trim_space())
+			.filter(it != '' && os.exists(it))
+	} else {
+		[]string{}
+	}
 }
 
 fn get_java_paths() []string {
@@ -82,7 +94,10 @@ fn main() {
 		'/usr/local/share/dotnet',
 	]
 
-	paths := arrays.append(arrays.append(default_paths, get_app_paths(app_paths)), get_java_paths())
+	mut paths := default_paths.clone()
+	paths << app_paths
+	paths << get_java_paths()
+	paths << get_custom_paths()
 
 	println(paths.join('\n'))
 }
