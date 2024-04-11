@@ -21,7 +21,7 @@ const apps = {
 	'eza':        'eza-community/eza'
 	'lazygit':    'jesseduffield/lazygit'
 	'lazydocker': 'jesseduffield/lazydocker'
-	'aichat': 'sigoden/aichat'
+	'aichat':     'sigoden/aichat'
 }
 
 pub struct Asset {
@@ -165,11 +165,9 @@ fn updater(appname string) ! {
 }
 
 pub fn update_all(appnames []string) {
-	all_apps := if appnames.len == 0 { apps.keys() } else { appnames }
+	all_apps := if appnames.len == 0 { updater.apps.keys() } else { appnames }
 	for app in all_apps {
-		updater(app) or {
-			updater.log.error('unable to update ${app}, ${err}')
-		}
+		updater(app) or { updater.log.error('unable to update ${app}, ${err}') }
 	}
 }
 
@@ -178,13 +176,9 @@ pub fn update_all(appnames []string) {
 // check_curl_tar checks if curl and tar are installed
 pub fn check_curl_tar() ! {
 	updater.log.debug('checking curl and tar')
-	os.execute_opt('which curl') or {
-		return error('curl is not installed')
-	}
+	os.execute_opt('which curl') or { return error('curl is not installed') }
 
-	os.execute_opt('which tar') or {
-		return error('tar is not installed')
-	}
+	os.execute_opt('which tar') or { return error('tar is not installed') }
 }
 
 pub fn check_target_dir() ! {
