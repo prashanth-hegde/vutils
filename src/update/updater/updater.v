@@ -21,6 +21,7 @@ const apps = {
 	'eza':        'eza-community/eza'
 	'lazygit':    'jesseduffield/lazygit'
 	'lazydocker': 'jesseduffield/lazydocker'
+	'aichat': 'sigoden/aichat'
 }
 
 pub struct Asset {
@@ -197,7 +198,6 @@ pub fn check_target_dir() ! {
 
 pub fn print_available_apps() {
 	println('Available apps:')
-	for app, _ in updater.apps {
-		println('  ${app}')
-	}
+	keys := updater.apps.keys()
+	println(keys.sorted().join('\n'))
 }
