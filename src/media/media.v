@@ -2,8 +2,7 @@ import cli { Command, Flag }
 import os
 import time
 import io.util
-import log as _ { Log }
-import common { run_parallel }
+import common { Log, run_parallel }
 
 const logger = &Log{
 	level: .info
@@ -12,7 +11,7 @@ const vid_file_types = ['avi', 'mp4', 'mkv', 'webm', 'mov']
 
 fn set_logger(cmd Command) Log {
 	if cmd.flags.get_bool('verbose') or { false } {
-		(*logger).set_level(.debug)
+		(*logger).level = .debug
 	}
 	return *logger
 }
@@ -50,7 +49,7 @@ fn downloads(cmd Command) ! {
 	mut log := set_logger(cmd)
 	infile := cmd.flags.get_string('input')!
 	lines := os.read_lines(infile)!
-	loglevel := if log.get_level() == .debug { 'warning' } else { 'quiet' }
+	loglevel := if log.level == .debug { 'warning' } else { 'quiet' }
 	mut workers := cmd.flags.get_int('workers') or { 1 }
 	if workers < 1 {
 		workers = 1
@@ -89,7 +88,7 @@ fn download(cmd Command) ! {
 	outfile := cmd.flags.get_string('output') or { 'out.mp4' }
 	url := cmd.args[0]
 	start := time.now()
-	loglevel := if log.get_level() == .debug { 'warning' } else { 'quiet' }
+	loglevel := if log.level == .debug { 'warning' } else { 'quiet' }
 	cmd_download := 'ffmpeg -loglevel ${loglevel} -protocol_whitelist file,http,https,tcp,tls -allowed_extensions ALL -i ${url} -bsf:a aac_adtstoasc -c copy ${outfile}'
 	log.debug(cmd_download)
 	// fix: does not work if the output file name has whitespace in it
