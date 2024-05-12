@@ -53,6 +53,10 @@ fn downloads(cmd Command) ! {
     if line.is_blank() { continue }
     tokens := line.split('|').map(it.trim_space())
     outfile := tokens[0]
+    if os.exists(os.abs_path(outfile)) { 
+      log.warn("${outfile} already exists, skipping...")
+      continue 
+    }
     url := tokens[1]
     cmd_download := 'ffmpeg -loglevel $loglevel -protocol_whitelist file,http,https,tcp,tls -allowed_extensions ALL -i $url -bsf:a aac_adtstoasc -c copy $outfile'
     log.debug(cmd_download)
