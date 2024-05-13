@@ -64,7 +64,6 @@ fn loop_until(cmd Command) ! {
 }
 
 fn loop_exec(cmd Command) ! {
-	// TODO: Implementation pending
 	mut input := []string{}
 	if cmd.flags.get_bool('verbose') or { false } {
 		(*log).level = .debug
