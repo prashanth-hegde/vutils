@@ -77,24 +77,9 @@ fn loop_exec(cmd Command) ! {
 			return error('file not found: ${filepath}')
 		}
 	} else if cmd.args.len == 0 {
-		mut buf := []u8{len: 1024, init: 0}
-		mut stdin := os.stdin()
-		defer {
-			stdin.close()
-		}
-		mut len := 1
-
-		for len > 0 && len < 1024 {
-			len = stdin.read_bytes_with_newline(mut buf)!
-			unsafe {
-				line := tos_clone(&buf[0])
-				sanitized_line := line.trim_space()
-				vmemset(&buf[0], 0, len)
-				if sanitized_line.len > 0 {
-					input << sanitized_line
-				}
-			}
-		}
+		lines := os.get_lines().map(it.trim_space()).filter(it.len > 0)
+		input << lines
+		log.debug('processing ${lines.len} lines')
 	}
 
 	mut workers := cmd.flags.get_int('workers') or { 1 }
