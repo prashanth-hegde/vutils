@@ -18,8 +18,8 @@ pub fn reload_cache(fd_path string) ! {
 		if !os.is_dir(dir) {
 			continue
 		}
-		filecache.log.debug('scanning ${dir}')
 		cmd := '${fd_path} --hidden --follow --absolute-path ${exclude_expr} . "${dir}" >> ${cfg.target}'
+		filecache.log.debug('scanning ${dir}: ${cmd}')
 		os.execute_opt(cmd) or {
 			msg := '${time.now()}: failed to refresh cache, error: ${err}'
 			mut log_file := os.open_append(cfg.log)!
