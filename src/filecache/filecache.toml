@@ -1,3 +1,7 @@
+interval = '4h'
+target = '~/.cache/fzf'
+log = '~/.cache/fzf.log'
+
 dirs = [
   '$HOME/dev',
   '/mnt/passport/Series',

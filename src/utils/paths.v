@@ -74,14 +74,14 @@ fn get_java_paths() []string {
 
 fn main() {
 	default_paths := [
+		'${home}/bin',
+		'${home}/scripts',
 		'/bin',
 		'/usr/bin',
 		'/sbin',
 		'/usr/sbin',
 		'/usr/local/bin',
 		'/usr/local/sbin',
-		'${home}/bin',
-		'${home}/scripts',
 	]
 
 	app_paths := [
