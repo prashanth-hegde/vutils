@@ -18,7 +18,7 @@ fn to_epoch(num int, unit string) {
   }
 
   // get the epoch and subtract delta from it
-  epoch_utc := time.utc().unix_time_milli()
+  epoch_utc := time.utc().unix_milli()
   relative_epoch := epoch_utc - delta * 1000
   println(relative_epoch)
 }
