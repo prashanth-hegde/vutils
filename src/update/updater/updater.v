@@ -60,7 +60,9 @@ pub fn (rel Release) get_asset(asset_os string, arch string) !string {
 fn get_os_arch_from_release(rel_name string) !(string, string) {
 	mut os_ := ''
 	mut arch_ := ''
-	if rel_name.contains('linux') {
+	if !(rel_name.ends_with('gz') || rel_name.ends_with('tar')) {
+		return error('not a tarball')
+	} else if rel_name.contains('linux') {
 		os_ = 'linux'
 	} else if rel_name.contains_any_substr(['darwin', 'mac']) {
 		os_ = 'mac'
