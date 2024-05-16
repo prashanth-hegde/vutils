@@ -50,7 +50,7 @@ pub fn (rel Release) get_asset(asset_os string, arch string) !string {
 
 	for asset in rel.assets {
 		release_os, release_arch := get_os_arch_from_release(asset.name.to_lower()) or { continue }
-		if release_os == required_os && release_arch == required_arch {
+		if release_os == required_os && release_arch == required_arch && (asset.name.ends_with('gz') || asset.name.ends_with('tar')) {
 			return asset.browser_download_url
 		}
 	}
@@ -60,9 +60,7 @@ pub fn (rel Release) get_asset(asset_os string, arch string) !string {
 fn get_os_arch_from_release(rel_name string) !(string, string) {
 	mut os_ := ''
 	mut arch_ := ''
-	if !(rel_name.ends_with('gz') || rel_name.ends_with('tar')) {
-		return error('not a tarball')
-	} else if rel_name.contains('linux') {
+	if rel_name.contains('linux') {
 		os_ = 'linux'
 	} else if rel_name.contains_any_substr(['darwin', 'mac']) {
 		os_ = 'mac'
