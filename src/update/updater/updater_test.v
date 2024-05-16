@@ -3,13 +3,6 @@ module updater
 import json
 import os
 
-fn test_fetch_assets() {
-	appname := 'rg'
-	appurl := 'junegunn/fzf'
-
-	get_binary(appname, appurl) or { assert false, 'Failed to fetch assets' }
-}
-
 fn test_curl_tar() {
 	check_curl_tar() or { assert false, 'Failed to fetch assets' }
 }
@@ -32,5 +25,23 @@ fn test_get_binary() ! {
 				continue
 			}
 		}
+	}
+}
+
+struct ArchNames {
+	os_ string
+	arch string
+	name string
+	err bool
+}
+fn test_release_names() ! {
+	rel_names := [
+		ArchNames{os_: 'linux', arch: 'amd64', name: 'f2_1.9.1_linux_amd64.tar.gz'},
+	]
+
+	for rel_name in rel_names {
+		os_, arch_ := get_os_arch_from_release(rel_name.name)!
+		assert rel_name.os_ == os_, 'Failed to get os from release'
+		assert rel_name.arch == arch_, 'Failed to get arch from release'
 	}
 }

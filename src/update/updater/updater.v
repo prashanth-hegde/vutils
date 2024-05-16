@@ -22,6 +22,7 @@ const apps = {
 	'lazygit':    'jesseduffield/lazygit'
 	'lazydocker': 'jesseduffield/lazydocker'
 	'aichat':     'sigoden/aichat'
+	'just':       'casey/just'
 }
 
 pub struct Asset {
@@ -113,7 +114,6 @@ fn get_asset_url(appname string, appurl string) !string {
 		updater.log.debug('os = linux arm64')
 		asset_url = release.get_asset('linux', 'arm64')!
 	} else {
-		// log.error("unsupported os")
 		return error('unsupported os')
 	}
 
@@ -125,11 +125,18 @@ fn download_and_extract(asset_url string) ! {
 	tmp_dir := util.temp_dir() or { return error('unable to create tmp dir, ${err}') }
 	asset_name := os.join_path(tmp_dir, 'asset.tgz')
 	updater.log.debug('downloading and extracting to ${tmp_dir}')
-	os.execute_opt('curl -sL ${asset_url} -o "${asset_name}"') or {
+	curl_cmd := 'curl -sL ${asset_url} -o "${asset_name}"'
+	log.debug('curl_cmd = ${curl_cmd}')
+	os.execute_opt(curl_cmd) or {
 		return error('unable to download ${asset_url}, ${err}')
 	}
-	os.execute_opt('tar -xzf "${asset_name}" -C "${tmp_dir}"') or {
-		os.execute_opt('tar -xf "${asset_name}" -C "${tmp_dir}"') or {
+
+	mut tar_cmd := 'tar -xzf "${asset_name}" -C "${tmp_dir}"'
+	log.debug('tar_cmd = ${tar_cmd}')
+	os.execute_opt(tar_cmd) or {
+		tar_cmd = 'tar -xf "${asset_name}" -C "${tmp_dir}"'
+		log.warn('unable to extract ${asset_name}, trying without z flag')
+		os.execute_opt(tar_cmd) or {
 			return error('unable to extract ${asset_name}, ${err}')
 		}
 	}
