@@ -1,0 +1,27 @@
+name: Raspberry Pi Release
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  rpi_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: RPiBuild
+        uses: pguyot/arm-runner-action@v2
+        with:
+          base_image: raspios_lite_arm64:latest
+          commands: ./build.sh
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bin.tgz
+          asset_name: vutils-aarch64-rpi-linux.tgz
+          tag: ${{ github.ref }}
+          overwrite: true
