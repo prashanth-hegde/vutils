@@ -16,10 +16,9 @@ jobs:
         with:
           base_image: raspios_lite_arm64:latest
           commands: |
-            sudo apt-get update -y
-            sudo apt-get upgrade --no-install-recommends -y
-            sudo apt-get install --no-install-recommends -y build-essential
-            ls -l
+            sudo apt-get update -y --no-install-recommends
+            sudo apt-get upgrade -y --no-install-recommends
+            sudo apt-get install -y --no-install-recommends gcc-12-aarch64-linux-gnu
             ./build.sh
 
       - name: Release
