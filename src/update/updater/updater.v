@@ -87,7 +87,8 @@ fn get_asset_url(appname string, appurl string) !string {
 	// github url for latest release
 	release_url := 'https://api.github.com/repos/${appurl}/releases/latest?per_page=3'
 
-	resp := os.execute_opt('curl -s -H "Accept: application/vnd.github.v3+json" ${release_url}') or {
+	curl := os.find_abs_path_of_executable('curl')!
+	resp := os.execute_opt('$curl -s -H "Accept: application/vnd.github.v3+json" ${release_url}') or {
 		updater.log.error('unable to get releases for ${appname}: ${err}')
 		return err
 	}
@@ -125,16 +126,18 @@ fn download_and_extract(asset_url string) ! {
 	tmp_dir := util.temp_dir() or { return error('unable to create tmp dir, ${err}') }
 	asset_name := os.join_path(tmp_dir, 'asset.tgz')
 	updater.log.debug('downloading and extracting to ${tmp_dir}')
-	curl_cmd := 'curl -sL ${asset_url} -o "${asset_name}"'
+	curl := os.find_abs_path_of_executable('curl')!
+	curl_cmd := '$curl -sL ${asset_url} -o "${asset_name}"'
 	log.debug('curl_cmd = ${curl_cmd}')
 	os.execute_opt(curl_cmd) or {
 		return error('unable to download ${asset_url}, ${err}')
 	}
 
-	mut tar_cmd := 'tar -xzf "${asset_name}" -C "${tmp_dir}"'
+	tar := os.find_abs_path_of_executable('tar')!
+	mut tar_cmd := '$tar -xzf "${asset_name}" -C "${tmp_dir}"'
 	log.debug('tar_cmd = ${tar_cmd}')
 	os.execute_opt(tar_cmd) or {
-		tar_cmd = 'tar -xf "${asset_name}" -C "${tmp_dir}"'
+		tar_cmd = '$tar -xf "${asset_name}" -C "${tmp_dir}"'
 		log.warn('unable to extract ${asset_name}, trying without z flag')
 		os.execute_opt(tar_cmd) or {
 			return error('unable to extract ${asset_name}, ${err}')
@@ -183,9 +186,12 @@ pub fn update_all(appnames []string) {
 // check_curl_tar checks if curl and tar are installed
 pub fn check_curl_tar() ! {
 	updater.log.debug('checking curl and tar')
-	os.execute_opt('which curl') or { return error('curl is not installed') }
-
-	os.execute_opt('which tar') or { return error('tar is not installed') }
+	if !os.exists_in_system_path('curl') {
+		return error('curl is not installed')
+	}
+	if !os.exists_in_system_path('tar') {
+		return error('tar is not installed')
+	}
 }
 
 pub fn check_target_dir() ! {
