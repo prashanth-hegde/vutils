@@ -1,8 +1,8 @@
-name: Cross Compile releases 
+name: Cross Compile releases
 
 on:
   push:
-    tags: [ '*' ]
+    tags: ["*"]
 
 defaults:
   run:
@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: ./build.sh
         shell: bash
-      
+
       - name: Release
         uses: svenstaro/upload-release-action@v2
         with:

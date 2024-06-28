@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # set -x
 
 # if command v is not present
@@ -15,18 +17,18 @@ if [ ! -d bin ]; then
 fi
 
 # configure compile flags
-CFLAGS="-prod -skip-unused -compress"
+COMP_FLAGS="-prod -skip-unused"
 # if linux then add -cflags -static
 if [ "$(uname)" == "Linux" ]; then
-	CFLAGS="$CFLAGS -cflags -static"
+	COMP_FLAGS="$COMP_FLAGS -compress -cflags -static"
 fi
 
-v ${CFLAGS} -o bin/urlencode $PWD/src/utils/urlencode.v
-v ${CFLAGS} -o bin/epoch $PWD/src/utils/epoch.v
-v ${CFLAGS} -o bin/loop $PWD/src/utils/loop.v
-v ${CFLAGS} -o bin/media $PWD/src/media/media.v
-v ${CFLAGS} -o bin/update $PWD/src/update
-v ${CFLAGS} -o bin/paths $PWD/src/utils/paths.v
-v ${CFLAGS} -o bin/filecache $PWD/src/filecache
+v ${COMP_FLAGS} -o bin/urlencode $PWD/src/utils/urlencode.v
+v ${COMP_FLAGS} -o bin/epoch $PWD/src/utils/epoch.v
+v ${COMP_FLAGS} -o bin/loop $PWD/src/utils/loop.v
+v ${COMP_FLAGS} -o bin/media $PWD/src/media
+v ${COMP_FLAGS} -o bin/update $PWD/src/update
+v ${COMP_FLAGS} -o bin/paths $PWD/src/utils/paths.v
+v ${COMP_FLAGS} -o bin/filecache $PWD/src/filecache
 
 tar -czvf bin.tgz bin/*
