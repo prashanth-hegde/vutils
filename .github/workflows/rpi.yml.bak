@@ -6,6 +6,7 @@ on:
 
 jobs:
   rpi_build:
+    name: Raspberry Pi Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,7 +15,7 @@ jobs:
       - name: RPiBuild
         uses: pguyot/arm-runner-action@v2
         with:
-          base_image: raspios_lite_arm64:latest
+          base_image: ubuntu:latest
           commands: |
             sudo apt-get update -y --no-install-recommends
             sudo apt-get install -y --no-install-recommends build-essential
