@@ -12,7 +12,6 @@ const apps = {
 	'fd':         'sharkdp/fd'
 	'fzf':        'junegunn/fzf'
 	'zoxide':     'ajeetdsouza/zoxide'
-	'exa':        'ogham/exa'
 	'btm':        'clementsan/bottom'
 	'neovim':     'neovim/neovim'
 	'helix':      'helix-editor/helix'
@@ -23,6 +22,7 @@ const apps = {
 	'lazydocker': 'jesseduffield/lazydocker'
 	'aichat':     'sigoden/aichat'
 	'just':       'casey/just'
+	'procs':      'dalance/procs'
 }
 
 pub struct Asset {
