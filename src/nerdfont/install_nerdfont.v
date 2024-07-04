@@ -13,7 +13,7 @@ fn install_nerdfont(keys []string) ! {
 	font_assets := search_nerdfont(keys) !
 	for font in font_assets {
 		log.info('installing font: ${font.name}')
-		cmd := 'curl -L "${font.browser_download_url}" | tar -xf - -C "${font_dir}" --keep-newer-files'
+		cmd := 'curl -L "${font.browser_download_url}" | tar --xz -C "${font_dir}" -xf -'
 		log.debug('curl: \n====\n${cmd}\n===\n')
 		os.execute_opt(cmd) or {
 			log.error('failed to download and extract font ${font.name}: $err')
