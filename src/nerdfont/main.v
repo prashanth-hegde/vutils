@@ -23,16 +23,8 @@ fn main() {
 				description: 'install nerd font'
 				required_args: 1
 				execute: fn (cmd Command) ! {
-					install_nerdfont(cmd.args, cmd.flags.get_bool('partial') or { false })!
+					install_nerdfont(cmd.args)!
 				}
-				flags: [
-					Flag{
-						name: 'partial'
-						abbrev: 'p'
-						description: 'partial match. Installs all fonts that have the given search key in their name. Case insensitive'
-						flag: .bool
-					},
-				]
 			},
 			Command{
 				name: 'search'
@@ -56,6 +48,6 @@ fn check_curl_tar() ! {
 	if !os.exists_in_system_path('tar')
 	|| !os.exists_in_system_path('xz')
 	|| !os.exists_in_system_path('curl') {
-		return error('nerdfont needs curl, tar and xz installed in system path.\ncould not find one ore more of these.\naborting')
+		return error('curl or tar not found in system path, aborting')
 	}
 }
