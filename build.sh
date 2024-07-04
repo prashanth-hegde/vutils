@@ -30,5 +30,6 @@ v ${COMP_FLAGS} -o bin/media $PWD/src/media
 v ${COMP_FLAGS} -o bin/update $PWD/src/update
 v ${COMP_FLAGS} -o bin/paths $PWD/src/utils/paths.v
 v ${COMP_FLAGS} -o bin/filecache $PWD/src/filecache
+v ${COMP_FLAGS} -o bin/nerdfont $PWD/src/nerdfont
 
 tar -czvf bin.tgz bin/*
