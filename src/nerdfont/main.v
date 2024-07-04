@@ -23,6 +23,7 @@ fn main() {
 				description: 'install nerd font'
 				required_args: 1
 				execute: fn (cmd Command) ! {
+					set_logging(cmd)
 					install_nerdfont(cmd.args)!
 				}
 			},
@@ -31,6 +32,7 @@ fn main() {
 				description: 'search for available fonts with the name'
 				required_args: 0
 				execute: fn (cmd Command) ! {
+					set_logging(cmd)
 					search_nerdfont(cmd.args)!
 				}
 			},
@@ -49,5 +51,11 @@ fn check_curl_tar() ! {
 	|| !os.exists_in_system_path('xz')
 	|| !os.exists_in_system_path('curl') {
 		return error('curl or tar not found in system path, aborting')
+	}
+}
+
+fn set_logging(cmd Command) {
+	if cmd.flags.get_bool('verbose') or { false } {
+	  (*log).level = .debug
 	}
 }
