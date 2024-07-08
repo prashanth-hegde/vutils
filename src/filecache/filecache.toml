@@ -2,22 +2,21 @@ interval = '4h'
 target = '~/.cache/fzf'
 log = '~/.cache/fzf.log'
 
-dirs = [
-  '$HOME/dev',
-  '/mnt/passport/Series',
-  '/mnt/passport/Movies',
-]
+dirs = ['$HOME/dev', '/mnt/passport/Series', '/mnt/passport/Movies']
 
 ignore = [
   'build',
+  'out',
   'bin',
   'node_modules',
   '.git',
   '.idea',
   '.gradle',
   '.DS_Store',
+  '.venv',
+  '__pycache__',
 ]
 
 [cache]
-  enabled = true
-  dir = '$HOME/.cache/fzf'
+enabled = true
+dir = '$HOME/.cache/fzf'
