@@ -186,7 +186,7 @@ fn cmd_parser() {
 	}
 
 	main_cmd.setup()
-	main_cmd.parse(os.args)
+	main_cmd.parse(arguments())
 }
 
 fn main() {

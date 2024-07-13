@@ -1,7 +1,6 @@
 module main
 
 import cli { Command, Flag }
-import os
 import filecache
 
 fn main() {
@@ -39,5 +38,5 @@ fn main() {
 	}
 
 	app.setup()
-	app.parse(os.args)
+	app.parse(arguments())
 }

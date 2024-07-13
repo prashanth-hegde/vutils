@@ -1,5 +1,4 @@
 import cli { Command, Flag }
-import os
 import net.urllib as enc
 
 fn main() {
@@ -13,5 +12,5 @@ fn main() {
   }
 
   app.setup()
-  app.parse(os.args)
+  app.parse(arguments())
 }

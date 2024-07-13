@@ -43,7 +43,7 @@ fn main() {
 		return
 	}
 	app.setup()
-	app.parse(os.args)
+	app.parse(arguments())
 }
 
 fn check_curl_tar() ! {

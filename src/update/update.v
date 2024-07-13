@@ -1,7 +1,6 @@
 module main
 
 import cli { Command, Flag }
-import os
 import updater
 
 /**
@@ -42,5 +41,5 @@ fn main() {
 	}
 
 	app.setup()
-	app.parse(os.args)
+	app.parse(arguments())
 }

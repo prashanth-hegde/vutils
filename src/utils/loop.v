@@ -164,7 +164,7 @@ fn parse_cmd() {
         | then the following commands are used
         | cat /tmp/1 <pipe> loop exec -w 2 # executes commands in parallel
         | loop exec -w 2 /tmp/1 # same as above, but reads file directly
-        | 
+        |
         '.strip_margin()
 				flags: [
 					Flag{
@@ -192,7 +192,7 @@ fn parse_cmd() {
 	}
 
 	main_cmd.setup()
-	main_cmd.parse(os.args)
+	main_cmd.parse(arguments())
 }
 
 // =========== Tests ==========
