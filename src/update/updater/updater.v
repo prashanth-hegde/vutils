@@ -98,23 +98,15 @@ fn get_asset_url(appname string, appurl string) !string {
 		return err
 	}
 
-	uname := os.uname()
-	mut asset_url := ''
-	if uname.sysname == 'Linux' && uname.machine == 'x86_64' {
-		// linux x64
-		updater.log.debug('os = linux x64')
-		asset_url = release.get_asset('linux', 'x86_64')!
-	} else if uname.sysname == 'Darwin' && uname.machine == 'arm64' {
-		// mac
-		updater.log.debug('os = mac arm64')
-		asset_url = release.get_asset('mac', 'arm64')!
-	} else if uname.sysname == 'Darwin' && uname.machine == 'x86_64' {
-		updater.log.debug('os = mac x64')
-		asset_url = release.get_asset('mac', 'x86_64')!
-	} else if uname.sysname == 'Linux' && uname.machine == 'arm64' {
-		updater.log.debug('os = linux arm64')
-		asset_url = release.get_asset('linux', 'arm64')!
-	} else {
+	asset_url := $if linux && x64 {
+		release.get_asset('linux', 'x86_64')!
+	} $else $if macos && arm64 {
+		release.get_asset('Darwin', 'arm64')!
+	} $else $if darwin && x64 {
+		release.get_asset('Darwin', 'x86_64')!
+	} $else $if linux && arm64 {
+		release.get_asset('linux', 'arm64')!
+	} $else {
 		return error('unsupported os')
 	}
 
