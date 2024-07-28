@@ -23,6 +23,9 @@ if [ "$(uname)" == "Linux" ]; then
 	COMP_FLAGS="$COMP_FLAGS -compress -cflags -static"
 fi
 
+# copy the v executabe to bin
+cp $(readlink -f $(type v)) bin/
+# build and copy executables
 v ${COMP_FLAGS} -o bin/urlencode $PWD/src/utils/urlencode.v
 v ${COMP_FLAGS} -o bin/urldecode $PWD/src/utils/urldecode.v
 v ${COMP_FLAGS} -o bin/epoch $PWD/src/utils/epoch.v
