@@ -15,7 +15,7 @@ fn join(cmd Command) ! {
 		log.debug('tmp created in ${tmp_path}')
 		defer {
 			// delete temp file after exiting
-			// os.rm(tmp_path) or { log.error('unable to delete tmp file ${tmp_path}') }
+			os.rm(tmp_path) or { log.error('unable to delete tmp file ${tmp_path}') }
 		}
 		for line in cmd.args {
 			abs_path := os.abs_path(line)
