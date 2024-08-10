@@ -15,10 +15,11 @@ fn join(cmd Command) ! {
 		log.debug('tmp created in ${tmp_path}')
 		defer {
 			// delete temp file after exiting
-			os.rm(tmp_path) or { log.error('unable to delete tmp file ${tmp_path}') }
+			// os.rm(tmp_path) or { log.error('unable to delete tmp file ${tmp_path}') }
 		}
 		for line in cmd.args {
-			tmp_file.writeln("file '${line}'")!
+			abs_path := os.abs_path(line)
+			tmp_file.writeln("file '${abs_path}'")!
 		}
 		tmp_file.close()
 		outfile := cmd.flags.get_string('output') or { 'output.mp4' }
