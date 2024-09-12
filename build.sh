@@ -24,7 +24,6 @@ if [ "$(uname)" == "Linux" ]; then
 fi
 
 # copy the v executabe to bin
-cp $(readlink -f $(type v)) bin/
 # build and copy executables
 v ${COMP_FLAGS} -o bin/urlencode $PWD/src/utils/urlencode.v
 v ${COMP_FLAGS} -o bin/urldecode $PWD/src/utils/urldecode.v
@@ -35,6 +34,6 @@ v ${COMP_FLAGS} -o bin/update $PWD/src/update
 v ${COMP_FLAGS} -o bin/paths $PWD/src/utils/paths.v
 v ${COMP_FLAGS} -o bin/filecache $PWD/src/filecache
 v ${COMP_FLAGS} -o bin/nerdfont $PWD/src/nerdfont
-v ${COMP_FLAGS} -o bin/organize $PWD/src/organize.v
+v ${COMP_FLAGS} -o bin/organize $PWD/src/organize
 
 tar -czvf bin.tgz bin/*
