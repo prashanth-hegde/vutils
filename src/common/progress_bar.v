@@ -23,7 +23,7 @@ mut:
 
 fn ProgressBar.new(opts ProgressBarOpts) ProgressBar {
 	return ProgressBar{
-		mu: mu = new_mutex()
+		mu: new_mutex()
 	}
 }
 
