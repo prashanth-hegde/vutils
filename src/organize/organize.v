@@ -18,7 +18,7 @@ fn convert_heic_to_jpg(glob_patterns []string) ! {
 	}
 	parallel.run(filenames, fn [ffmpeg] (filename string) {
 		base_name := os.file_name(filename).rsplit_nth('.', 2)[1]
-		cmd := '$ffmpeg -i ${filename} -o ${base_name}.jpg'
+		cmd := '${ffmpeg} -i ${filename} ${base_name}.jpg'
 		os.execute_opt(cmd) or {
 			log.error('failed to convert ${filename}, cmd=${cmd}')
 			return
@@ -72,7 +72,7 @@ fn main() {
 			} else {
 				cmd.args
 			}
-			if cmd.flags.contains('convert') {
+			if cmd.flags.get_bool('convert') or { false } {
 				convert_heic_to_jpg(file_glob)!
 			}
 			organize_by_date(file_glob)!
