@@ -18,10 +18,16 @@ fn resize(cmd Command) ! {
 		}
 		log.info('"${file}" resizing...')
 		out_file := replace_file_name(file, '-resized', true)
-		ff_cmd := '${ffmpeg} -i "${file}" -vf scale="-1:${vid_resolution}" "${out_file}"'
+		// working command
+		// ffmpeg -i input.mp4 -vf "scale=trunc((iw/ih)*480/2)*2:480" -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 128k input-resized.mp4
+		ff_cmd := '${ffmpeg} -i "${file}" -vf "scale=trunc((iw/ih)*$vid_resolution/2)*2:$vid_resolution" -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 128k "${out_file}"'
 		log.debug(ff_cmd)
 		start := time.now()
-		os.execute(ff_cmd)
+		os.execute_opt(ff_cmd) or {
+			log.error('Failed to resize "${file}"')
+			log.error('===\n$err\n===')
+			continue
+		}
 		log.info('"${file}" resized in ${time.since(start)}')
 	}
 }

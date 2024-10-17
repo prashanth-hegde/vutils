@@ -15,12 +15,7 @@ fn set_logger(cmd Command) Log {
 }
 
 fn check_ffmpeg() !string {
-	ff_path := os.execute('type -p ffmpeg 2>/dev/null').output
-	return if ff_path.len > 0 {
-		ff_path.trim_space()
-	} else {
-		error('ffmpeg not found, exiting')
-	}
+	return os.find_abs_path_of_executable('ffmpeg')
 }
 
 // ============= Command Parser ==================
