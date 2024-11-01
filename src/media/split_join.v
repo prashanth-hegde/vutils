@@ -31,7 +31,7 @@ fn join(cmd Command) ! {
 		os.execute_opt(cat_cmd)!
 		log.info('finished in ${time.since(start)}')
 	} else {
-		return error('not all files are of the same type, use merge to merge formats')
+		return error('not all files are of the expected mp3,mp4 types, use merge to combine audio/video or concat to concat files')
 	}
 }
 

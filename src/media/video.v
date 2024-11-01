@@ -32,6 +32,32 @@ fn resize(cmd Command) ! {
 	}
 }
 
+fn convert(cmd Command) ! {
+	ffmpeg := check_ffmpeg()!
+	mut log := set_logger(cmd)
+
+	input_files := os.glob(...cmd.args)!
+	output_extension := cmd.flags.get_string('extension') or { 'mp4' }
+	for file in input_files {
+		if (file_ext(file) or { '' }) !in vid_file_types {
+			continue
+		}
+		log.info('"${file}" converting...')
+		out_file := '${file[..(file.last_index('.') or { file.len })]}-converted.mp4'
+		// working command
+		// ffmpeg -i input.wmv -c:v libx264 -crf 23 -preset medium -tune stillimage output.mp4
+		ff_cmd := '${ffmpeg} -i "${file}" -c:v libx264 -crf 23 -preset medium -tune stillimage "${out_file}"'
+		log.debug(ff_cmd)
+		start := time.now()
+		os.execute_opt(ff_cmd) or {
+			log.error('Failed to convert "${file}"')
+			log.error('===\n$err\n===')
+			continue
+		}
+		log.info('"${file}" converted in ${time.since(start)}')
+	}
+}
+
 // TODO
 // vertical flip
 //

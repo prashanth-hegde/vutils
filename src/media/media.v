@@ -5,7 +5,7 @@ import common { Log }
 const logger = &Log{
 	level: .info
 }
-const vid_file_types = ['avi', 'mp4', 'mkv', 'webm', 'mov']
+const vid_file_types = ['avi', 'mp4', 'mkv', 'webm', 'mov', 'wmv']
 
 fn set_logger(cmd Command) Log {
 	if cmd.flags.get_bool('verbose') or { false } {
@@ -174,6 +174,22 @@ fn cmd_parser() {
 						description: 'output filename'
 						flag: .string
 						required: true
+					},
+				]
+			},
+			Command{
+				name: 'convert'
+				required_args: 1
+				description: 'video converter - convert to mp4'
+				usage: '-e mp4 *.avi'
+				execute: convert
+				flags: [
+					Flag{
+						name: 'extension'
+						abbrev: 'e'
+						description: 'extension to convert to'
+						flag: .string
+						required: false
 					},
 				]
 			},
