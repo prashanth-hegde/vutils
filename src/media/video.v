@@ -37,7 +37,10 @@ fn convert(cmd Command) ! {
 	mut log := set_logger(cmd)
 
 	input_files := os.glob(...cmd.args)!
-	output_extension := cmd.flags.get_string('extension') or { 'mp4' }
+	mut output_extension := cmd.flags.get_string('extension') or { 'mp4' }
+	if output_extension == '' {
+		output_extension = 'mp4'
+	}
 	for file in input_files {
 		if (file_ext(file) or { '' }) !in vid_file_types {
 			continue
