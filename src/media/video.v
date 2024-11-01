@@ -43,7 +43,7 @@ fn convert(cmd Command) ! {
 			continue
 		}
 		log.info('"${file}" converting...')
-		out_file := '${file[..(file.last_index('.') or { file.len })]}-converted.mp4'
+		out_file := '${file[..(file.last_index('.') or { file.len })]}-converted.$output_extension'
 		// working command
 		// ffmpeg -i input.wmv -c:v libx264 -crf 23 -preset medium -tune stillimage output.mp4
 		ff_cmd := '${ffmpeg} -i "${file}" -c:v libx264 -crf 23 -preset medium -tune stillimage "${out_file}"'
