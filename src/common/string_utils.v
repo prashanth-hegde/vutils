@@ -14,7 +14,7 @@ pub fn tokenize(input string) []string {
 
 	mut quotes := Stack[u8]{}
 	for idx, i in input {
-		if (is_quote(i)) && (quotes.peek() or {`0`}) == i {
+		if (is_quote(i)) && (quotes.peek() or {u8(`0`)}) == i {
 			quotes.pop() or { continue }
 			if idx == input.len - 1 {
 				tokens << input[start .. idx]
