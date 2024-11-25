@@ -4,7 +4,6 @@ import os
 import time
 import cli { Command, Flag }
 import common { Log }
-import arrays.parallel
 import arrays { flatten }
 
 const log = &Log{}
