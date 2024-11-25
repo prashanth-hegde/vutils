@@ -39,7 +39,6 @@ fn main() {
 				description: 'search for available fonts with the name'
 				required_args: 0
 				execute: fn (cmd Command) ! {
-					set_logging(cmd)
 					search_nerdfont(cmd.args)!
 				}
 			},
