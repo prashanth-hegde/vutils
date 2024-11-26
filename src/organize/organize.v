@@ -7,7 +7,7 @@ import common { Log }
 import arrays { flatten }
 
 const log = &Log{}
-const image_exts = ['jpg', 'jpeg', 'heic', 'webp']
+const image_exts = ['jpg', 'jpeg', 'heic', 'webp', 'mov', 'mp4']
 
 fn convert_heic_to_jpg(glob_patterns []string, recurse bool) ! {
 	ffmpeg := os.find_abs_path_of_executable('ffmpeg') or {
@@ -41,7 +41,7 @@ fn organize_by_date(glob_patterns []string, recurse bool) ! {
 			continue
 		}
 		epoch := time.unix(file_stat.mtime)
-		dirname := os.join_path('${epoch.year}', '${epoch.month:02}')
+		dirname := os.join_path('${epoch.year}', '${epoch.year}${epoch.month:02}${epoch.day:02}')
 		if !os.exists(dirname) {
 			os.mkdir_all(dirname) or {
 				log.error('failed to create directory ${dirname}')
