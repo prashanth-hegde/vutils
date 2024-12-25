@@ -68,12 +68,11 @@ fn (g []Goto) goto(key string) ! {
 	shell_path := os.find_abs_path_of_executable('bash') or {
 		os.find_abs_path_of_executable('sh')!
 	}
-	cd_path := os.find_abs_path_of_executable('cd')!
 
 	// first preference goes to keys
 	for i in g {
 		if key.to_lower() == i.name.to_lower() || i.name.to_lower().contains(key.to_lower()) {
-			os.system('$shell_path -c "$cd \"${i.path}\" && exec \$SHELL"')
+			os.system('$shell_path -c "cd \"${i.path}\" && exec \$SHELL"')
 			return
 		}
 	}
@@ -81,7 +80,7 @@ fn (g []Goto) goto(key string) ! {
 	// if keys not found, search in paths
 	for i in g {
 		if i.path.to_lower().contains(key.to_lower()) {
-			os.system('$shell_path -c "$cd \"${i.path}\" && exec \$SHELL"')
+			os.system('$shell_path -c "cd \"${i.path}\" && exec \$SHELL"')
 			return
 		}
 	}
