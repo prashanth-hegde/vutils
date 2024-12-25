@@ -8,13 +8,14 @@ fn cmd_parser() {
 	mut config := json.decode([]Goto, os.read_file(config_path) or { '[]' }) or { []Goto{} }
 
 	mut main_cmd := Command{
-		name:        'goto'
-		description: 'A simple tool to navigate to a directory'
-		version:     '0.0.1'
-		execute:     fn (cmd Command) ! {
-			println('main command executed')
+		name:          'goto'
+		description:   'A simple tool to navigate to a directory'
+		version:       '0.0.1'
+		required_args: 1
+		execute:       fn [config] (cmd Command) ! {
+			config.goto(cmd.args[0])!
 		}
-		commands:    [
+		commands:      [
 			Command{
 				name:          'add'
 				description:   'Adds current directory to the list with a preferred name'
