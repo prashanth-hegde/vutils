@@ -27,7 +27,6 @@ pub fn update_all(appnames []string)! {
 		}
 		path, exe := download_assets_for_repo(apps[app])!
 		dest := os.join_path(os.home_dir(), 'bin')
-		dump(dest)
 		for item in exe {
 			log.info('updating ${os.file_name(item)}')
 			os.mv(item, dest) or { log.error('unable to move ${item}') }
