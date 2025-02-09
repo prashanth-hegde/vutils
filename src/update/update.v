@@ -25,9 +25,12 @@ fn main() {
       if cmd.flags.get_bool('verbose') or { false } {
         (*updater.log).level = .debug
       }
-			updater.check_curl_tar()!
-      updater.check_target_dir()!
-			updater.update_all(cmd.args)
+
+      if cmd.args.len == 0 {
+				updater.print_available_apps()
+			} else {
+				updater.update_all(cmd.args)!
+			}
 		}
     commands: [
       Command{

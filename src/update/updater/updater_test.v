@@ -1,47 +1,45 @@
 module updater
 
-import json
 import os
 
-fn test_curl_tar() {
-	check_curl_tar() or { assert false, 'Failed to fetch assets' }
+// test_update_all_valid_app verifies that when update_all is called with a valid app name,
+// the dummy asset is “moved” into the $HOME/bin directory.
+fn test_update_all_valid_app()! {
+	// Create a temporary directory to act as HOME - so that os.home_dir() returns this path
+	home_dir := os.join_path(os.temp_dir(), 'updater_test_home')
+	os.setenv('HOME', home_dir, true)
+
+	// Also set the bin_dir while at it
+	bin_dir := os.join_path(home_dir, 'bin')
+	os.mkdir_all(bin_dir)!
+
+	// Call update_all with a valid app name.
+	update_all(['rg'])!
+
+	// validate
+	assert os.exists(os.join_path(bin_dir, 'rg')), 'rg is not present in ${bin_dir}'
+
+	// cleanup
+	os.rmdir_all(home_dir)!
 }
 
-fn test_get_binary() ! {
-	appname := 'rg'
-	appurl := 'junegunn/fzf'
-	release_url := 'https://api.github.com/repos/${appurl}/releases/latest?per_page=3'
+// test_update_all_invalid_app verifies that calling update_all with an invalid app name
+// does not install any files.
+fn test_update_all_invalid_app() {
+	// Create a temporary directory to act as HOME - so that os.home_dir() returns this path
+	home_dir := os.join_path(os.temp_dir(), 'updater_test_home')
+	os.setenv('HOME', home_dir, true)
 
-	resp := os.execute('curl -s -H "Accept: application/vnd.github.v3+json" ${release_url}')
-	release := json.decode(Release, resp.output)!
+	// Also set the bin_dir while at it
+	bin_dir := os.join_path(home_dir, 'bin')
+	os.mkdir_all(bin_dir)!
 
-	oses := ['linux', 'darwin', 'macos']
-	archs := ['amd64', 'arm64', 'x86_64']
+	// Call update_all with a valid app name.
+	update_all(['non-existent-app'])!
 
-	for os_ in oses {
-		for arch in archs {
-			asset := release.get_asset(os_, arch) or {
-				assert false, 'Failed to fetch assets for ${os_}, ${arch}'
-				continue
-			}
-		}
-	}
-}
+	// validate
+	assert os.ls(bin_dir)!.len == 0, 'bin directory is not empty'
 
-struct ArchNames {
-	os_ string
-	arch string
-	name string
-	err bool
-}
-fn test_release_names() ! {
-	rel_names := [
-		ArchNames{os_: 'linux', arch: 'amd64', name: 'f2_1.9.1_linux_amd64.tar.gz'},
-	]
-
-	for rel_name in rel_names {
-		os_, arch_ := get_os_arch_from_release(rel_name.name)!
-		assert rel_name.os_ == os_, 'Failed to get os from release'
-		assert rel_name.arch == arch_, 'Failed to get arch from release'
-	}
+	// cleanup
+	os.rmdir_all(home_dir)!
 }
