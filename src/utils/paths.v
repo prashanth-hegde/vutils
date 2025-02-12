@@ -87,6 +87,7 @@ fn main() {
 	app_paths := [
 		'/opt/homebrew',
 		'${home}/.local',
+		'${home}/go'
 		'${home}/apps/go',
 		'${home}/apps/kafka',
 		'${home}/apps/node',
