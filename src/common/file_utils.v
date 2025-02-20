@@ -56,3 +56,7 @@ pub fn choose_fzf(items []string) !string {
 	// Trim and return the chosen item
 	return output.trim_space()
 }
+
+pub fn file_extension(filename string) ?(string, string) {
+	return filename.rsplit_once('.')
+}
