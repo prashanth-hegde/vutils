@@ -6,16 +6,18 @@ import common
 import arrays
 import strings
 
-const ignore_patterns := ['.git', '.vscode', '.idea', '.DS_Store', 'venv', 'node_modules', 'build',
-			'dist', 'LICENSE']
+const ignore_patterns = ['.git', '.vscode', '.idea', '.DS_Store', 'venv', 'node_modules', 'build',
+	'dist', 'LICENSE']
+
 pub struct DocgenConfig {
-	pub:
+pub:
 	verbose   bool
 	extension []string
 	output    string
 	stat      bool
 	dir       string
 	recurse   bool
+	glob      []string
 }
 
 pub fn set_log_level(level log.Level) {
@@ -46,6 +48,23 @@ pub fn run_docgen(cfg DocgenConfig) ! {
 	} else {
 		file_list << os.ls(cfg.dir)!
 	}
+
+	// Step 2.1: account for glob patterns
+	if cfg.glob.len > 0 {
+		mut files_matching_glob := []string{}
+		for file in file_list {
+			for g in cfg.glob {
+				if file.match_glob(g) {
+					files_matching_glob << file
+					break
+				}
+			}
+		}
+
+		// assign file_list to only files matching glob patterns
+		file_list = files_matching_glob.clone()
+	}
+
 	log.debug('file_list: ${file_list}')
 
 	// Step 3: filter files by extension
