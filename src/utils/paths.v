@@ -92,6 +92,7 @@ fn main() {
 		'~/apps',
 		'/',
 		'/usr/local',
+		'/opt/homebrew/bin'
 	]
 
 	mut paths := []string{cap: 20}
