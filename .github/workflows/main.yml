@@ -34,6 +34,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Only install Rosetta if targeting x86_64 on macOS.
+      - name: Install Rosetta (macOS x86_64)
+        if: matrix.settings.target == 'x86_64-apple-darwin'
+        run: |
+          /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+
       - name: Build
         run: ./build.sh
         shell: bash
