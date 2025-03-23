@@ -186,9 +186,7 @@ fn get_asset_for_repo(repo string) !ReleaseAsset {
 /// get_glibc_or_musl_asset
 /// This function is used to determine if the current system is using musl or glibc and return the appropriate asset from the given list
 fn get_glibc_or_musl_asset(assets []ReleaseAsset) !ReleaseAsset {
-	is_musl := os.walk_ext('/proc/self/map_files/', '')
-		.map(os.real_path(it))
-		.any(it.contains('musl'))
+	is_musl := os.exists('/usr/lib/libc.musl-x86_64.so.1')
 
 	return if is_musl {
 		musl_assets := assets.filter(it.name.to_lower().contains('musl'))
