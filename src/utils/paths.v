@@ -87,15 +87,22 @@ fn get_java_paths() []string {
 }
 
 fn main() {
+	default_paths := [
+		'~/bin',
+		'~/scripts',
+		'/bin',
+		'/sbin'
+		'/usr/bin',
+		'/usr/sbin',
+		'/usr/local/bin',
+		'/opt/homebrew/bin',
+	]
 	app_paths := [
-		'~',
 		'~/apps',
-		'/',
-		'/usr/local',
-		'/opt/homebrew/bin'
 	]
 
 	mut paths := []string{cap: 20}
+	paths << default_paths.map(abs_path(it)).filter(os.is_dir(it))
 	paths << get_app_paths(app_paths)
 	paths << get_java_paths()
 	paths << get_custom_paths()

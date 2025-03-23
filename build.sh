@@ -29,6 +29,7 @@ v ${COMP_FLAGS} -o bin/urlencode $PWD/src/utils/urlencode.v
 v ${COMP_FLAGS} -o bin/urldecode $PWD/src/utils/urldecode.v
 v ${COMP_FLAGS} -o bin/epoch $PWD/src/utils/epoch.v
 v ${COMP_FLAGS} -o bin/loop $PWD/src/utils/loop.v
+v ${COMP_FLAGS} -o bin/swap $PWD/src/utils/swap.v
 v ${COMP_FLAGS} -o bin/media $PWD/src/media
 v ${COMP_FLAGS} -o bin/update $PWD/src/update
 v ${COMP_FLAGS} -o bin/paths $PWD/src/utils/paths.v
