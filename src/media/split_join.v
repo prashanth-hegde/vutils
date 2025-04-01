@@ -2,10 +2,11 @@ import time
 import os
 import cli { Command }
 import io.util
+import log
 
 fn join(cmd Command) ! {
 	ffmpeg := check_ffmpeg()!
-	mut log := set_logger(cmd)
+	// mut log := set_logger(cmd)
 	// For example, ffmpeg -i "concat:video1.mp4|video2.mp4|video3.mp4" -c copy output.mp4
 	if cmd.args.all(it.ends_with('.mp4')) || cmd.args.all(it.ends_with('.mp3')) {
 		log.info('concatenating files')
@@ -26,7 +27,7 @@ fn join(cmd Command) ! {
 		if os.exists(outfile) {
 			os.rm(outfile)!
 		}
-		cat_cmd := '$ffmpeg -f concat -safe 0 -i ${tmp_path} -c copy ${outfile}'
+		cat_cmd := '${ffmpeg} -f concat -safe 0 -i ${tmp_path} -c copy ${outfile}'
 		log.debug(cat_cmd)
 		os.execute_opt(cat_cmd)!
 		log.info('finished in ${time.since(start)}')
@@ -38,13 +39,13 @@ fn join(cmd Command) ! {
 // merge combines audio and video formats of given files
 fn merge(cmd Command) ! {
 	ffmpeg := check_ffmpeg()!
-	mut log := set_logger(cmd)
+	// mut log := set_logger(cmd)
 	audio_file := cmd.flags.get_string('audio')!
 	video_file := cmd.flags.get_string('video')!
 	out_file := cmd.flags.get_string('output')!
 
 	start := time.now()
-	merge_cmd := '$ffmpeg -i "${video_file}" -i "${audio_file}" -c:v copy -c:a aac -shortest "${out_file}"'
+	merge_cmd := '${ffmpeg} -i "${video_file}" -i "${audio_file}" -c:v copy -c:a aac -shortest "${out_file}"'
 	log.debug(merge_cmd)
 	cmd_out := os.execute(merge_cmd).output
 	log.debug(cmd_out)
@@ -55,7 +56,7 @@ fn merge(cmd Command) ! {
 /// Silence is hard-coded to -30dB and duration of 1.0 seconds
 fn split_on_silence(cmd Command) ! {
 	ffmpeg := check_ffmpeg()!
-	mut log := set_logger(cmd)
+	// mut log := set_logger(cmd)
 	infile := cmd.args[0]
 	if !infile.ends_with('.mp3') || !os.exists(infile) {
 		return error('not an audio file, aborting')
@@ -69,7 +70,7 @@ fn split_on_silence(cmd Command) ! {
   [silencedetect @ 0x55ff80b857c0] silence_start: 269.44
   [silencedetect @ 0x55ff80b857c0] silence_end: 273.654 | silence_duration: 4.21342AA
   */
-	silence_detect_cmd := '$ffmpeg -hide_banner -nostats -i "${infile}" -af silencedetect=noise=-30dB:d=1.0 -f null -'
+	silence_detect_cmd := '${ffmpeg} -hide_banner -nostats -i "${infile}" -af silencedetect=noise=-30dB:d=1.0 -f null -'
 	silence_detect_out := os.execute(silence_detect_cmd).output
 	// log.debug(silence_detect_out)
 	tmp_file.write(silence_detect_out.bytes())!
@@ -83,7 +84,7 @@ fn split_on_silence(cmd Command) ! {
 		return error('no silence detected in the track, aborting')
 	}
 
-	cmd_split := '$ffmpeg -v warning -i ${infile} -f segment -segment_times "${seq_detect_out}" -reset_timestamps 1 -map 0:a -c:a copy "output-%02d.mp3"'
+	cmd_split := '${ffmpeg} -v warning -i ${infile} -f segment -segment_times "${seq_detect_out}" -reset_timestamps 1 -map 0:a -c:a copy "output-%02d.mp3"'
 	log.debug(cmd_split)
 	split_out := os.execute(cmd_split).output
 	os.execute_opt(cmd_split)!
@@ -98,7 +99,7 @@ fn split_on_silence(cmd Command) ! {
 // output_file_name2.mp4 | chunk_start | chunk_end
 fn split_video(cmd Command) ! {
 	ffmpeg := check_ffmpeg()!
-	mut log := set_logger(cmd)
+	// mut log := set_logger(cmd)
 	splits := cmd.args[0]
 	infile := cmd.args[1]
 	if !os.exists(splits) {
@@ -119,7 +120,7 @@ fn split_video(cmd Command) ! {
 		log.debug(cmd_)
 		os.execute_opt(cmd_) or {
 			log.error('failed to split ${infile} to ${outfile}')
-			log.error('===\n$err\n===')
+			log.error('===\n${err}\n===')
 			continue
 		}
 		log.info('finished splitting to ${outfile} in ${time.since(start_time)}')

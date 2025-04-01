@@ -1,3 +1,5 @@
+import os
+
 fn file_ext(filename string) ?string {
 	return filename[(filename.last_index('.')? + 1)..]
 }
@@ -15,4 +17,12 @@ fn replace_file_name(filename string, new_name string, append_to_basename bool) 
 		new_name
 	}
 	return filename.replace(basename, new_filename)
+}
+
+// append_to_filename appends a postfix to the filename
+// Preserves the file extension
+fn append_to_filename(filename string, postfix string) string {
+	file_ext := os.file_ext(filename)
+	filename_only := filename.replace(file_ext, '')
+	return '${filename_only}-${postfix}${file_ext}'
 }

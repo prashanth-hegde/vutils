@@ -1,7 +1,7 @@
 import os
 import time
 import cli { Command }
-import common { run_parallel }
+import arrays.parallel
 
 /// downloads videos from a list of urls in a file
 fn downloads(cmd Command) ! {
@@ -36,7 +36,7 @@ fn downloads(cmd Command) ! {
 		log.info('${outfile} download completed in ${time.since(start)}')
 	}
 
-	run_parallel(lines, workers, execute_download)
+	parallel.run(lines, execute_download, workers: workers)
 }
 
 // download downloads videos from weird streams that are not straightforward
