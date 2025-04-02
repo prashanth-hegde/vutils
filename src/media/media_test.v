@@ -15,6 +15,18 @@ fn (t TestData) file_name() string {
 	return os.join_path(os.temp_dir(), '${t.name}.${t.ext}')
 }
 
+fn (t TestData) filename_with_postfix(postfix string) string {
+	return os.join_path(os.temp_dir(), '${t.name}-${postfix}.${t.ext}')
+}
+
+fn (t TestData) filename_with_postfix_and_ext(postfix string, ext string) string {
+	return os.join_path(os.temp_dir(), '${t.name}-${postfix}.${ext}')
+}
+
+fn (t TestData) filename_with_ext(ext string) string {
+	return os.join_path(os.temp_dir(), '${t.name}.${ext}')
+}
+
 const test_data = [
 	TestData{
 		name:     '01_ocean_w_audio'
@@ -97,29 +109,32 @@ const function_tests = [
 		input:          test_data[0].file_name()
 		output:         ''
 		expected_files: [
-			replace_file_extension(append_to_filename(test_data[0].file_name(), 'converted'),
-				'mp4'),
+			test_data[0].filename_with_postfix_and_ext('converted', 'mp4'),
 		]
 	},
 	FunctionTestData{
 		func:           .resize
 		input:          test_data[0].file_name()
 		output:         ''
-		expected_files: [append_to_filename(test_data[0].file_name(), 'resized')]
+		expected_files: [
+			test_data[0].filename_with_postfix('resized'),
+		]
 	},
 	FunctionTestData{
 		func:           .extract_audio
 		input:          test_data[0].file_name()
 		output:         ''
 		expected_files: [
-			replace_file_extension(test_data[0].file_name(), 'mp3'),
+			test_data[0].filename_with_ext('mp3'),
 		]
 	},
 	FunctionTestData{
 		func:           .strip_audio
 		input:          test_data[0].file_name()
 		output:         ''
-		expected_files: [append_to_filename(test_data[0].file_name(), 'noaudio')]
+		expected_files: [
+			test_data[0].filename_with_postfix('noaudio'),
+		]
 	},
 ]
 
