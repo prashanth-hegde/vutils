@@ -36,6 +36,7 @@ enum FFMpegFunction {
 	strip_audio
 	join
 	merge
+	split_on_silence
 }
 
 const ffmpeg_cmds = {
@@ -45,6 +46,8 @@ const ffmpeg_cmds = {
 	.strip_audio:           'ffmpeg -y -hide_banner -nostats -i "input" -c copy -an "output"'
 	.join:                  'ffmpeg -y -hide_banner -nostats -f concat -safe 0 -i "input" -c copy "output"'
 	.merge:                 'ffmpeg -y -hide_banner -nostats -i "video" -i "audio" -c:v copy -c:a aac -shortest "output"'
+	.split_on_silence:        'ffmpeg -v warning -i "input" -f segment -segment_times "segments" -reset_timestamps 1 -map 0:a -c:a copy "output-%02d.mp3"'
+
 }
 
 // ====== Helpers ======

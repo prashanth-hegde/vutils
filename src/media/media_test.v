@@ -149,3 +149,21 @@ fn test_all_media_commands() ! {
 	}
 	cleanup_test_data()!
 }
+
+fn test_filenames_without_exts() {
+	tests := [
+		'file_utils_test.v',
+		'/path/to/home/test.v',
+		'something_else',
+	]
+	asserts := [
+		'file_utils_test',
+		'/path/to/home/test',
+		'something_else',
+	]
+
+	for i, test in tests {
+		dump('testing ${test}')
+		assert file_name_without_ext(test) == asserts[i]
+	}
+}
