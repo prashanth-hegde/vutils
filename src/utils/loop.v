@@ -3,6 +3,7 @@ import cli { Command, Flag }
 import os
 import arrays { join_to_string }
 import time
+import arrays.parallel
 
 const log = &common.Log{.info}
 const version = '0.0.2'
@@ -86,7 +87,7 @@ fn loop_exec(cmd Command) ! {
 		workers = 1
 	}
 
-	common.run_parallel(input, workers, fn (command string) {
+	parallel.run(input, fn (command string) {
 		log.debug('executing command: ${command}')
 		res := os.execute(command)
 		if res.exit_code != 0 {
@@ -94,7 +95,7 @@ fn loop_exec(cmd Command) ! {
 		} else {
 			log.info(res.output)
 		}
-	})
+	}, workers: workers)
 }
 
 fn main() {
