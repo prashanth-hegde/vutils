@@ -2,7 +2,7 @@ import os
 import time
 import log
 
-pub fn run_ffmpeg_command2(func FFMpegFunction, replacers map[string]string) ! {
+pub fn run_ffmpeg_command(func FFMpegFunction, replacers map[string]string) ! {
 	start := time.now()
 	log.info('operation: ${func} started')
 	mut raw_cmd := ffmpeg_cmds[func] or { return error('invalid function provided: ${func}') }

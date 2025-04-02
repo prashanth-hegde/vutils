@@ -23,7 +23,7 @@ fn join(cmd Command) ! {
 		file_lines := cmd.args.map('file ${it}') // no quotes around $it
 		os.write_lines(tmp_path, file_lines)!
 		outfile := cmd.flags.get_string('output') or { 'output.mp4' }
-		run_ffmpeg_command2(.join, {
+		run_ffmpeg_command(.join, {
 			'input':  tmp_path
 			'output': outfile
 		})!
@@ -38,7 +38,7 @@ fn merge(cmd Command) ! {
 	video_file := cmd.flags.get_string('video')!
 	out_file := cmd.flags.get_string('output')!
 
-	run_ffmpeg_command2(.merge, {
+	run_ffmpeg_command(.merge, {
 		'audio':  audio_file
 		'video':  video_file
 		'output': out_file
@@ -104,7 +104,7 @@ fn split_on_silence(cmd Command) ! {
 		split_times := silences.map(it.end).join(',')
 		log.info('split_times: ${split_times}')
 
-		run_ffmpeg_command2(.split_on_silence, {
+		run_ffmpeg_command(.split_on_silence, {
 			'input':    input_file
 			'segments': split_times
 			'output':   file_name_without_ext(input_file)
@@ -134,7 +134,7 @@ fn split_video(cmd Command) ! {
 		}
 		outfile, start, end := tokens[0].trim_space(), tokens[1].trim_space(), tokens[2].trim_space()
 
-		run_ffmpeg_command2(.split_video, {
+		run_ffmpeg_command(.split_video, {
 			'input':  infile
 			'output': outfile
 			'start':  start
