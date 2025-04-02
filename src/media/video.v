@@ -21,8 +21,8 @@ fn resize(cmd Command) ! {
 
 		output := append_to_filename(file, 'resized')
 		run_ffmpeg_command(.resize, {
-			'input': file
-			'output': output
+			'input':      file
+			'output':     output
 			'resolution': vid_resolution
 		})!
 	}
@@ -45,7 +45,7 @@ fn convert(cmd Command) ! {
 		mut output := append_to_filename(file, 'converted')
 		output = replace_file_extension(output, output_extension)
 		run_ffmpeg_command(.convert, {
-			'input': file
+			'input':  file
 			'output': output
 		})!
 	}
