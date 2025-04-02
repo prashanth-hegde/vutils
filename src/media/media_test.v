@@ -98,7 +98,7 @@ fn (f FunctionTestData) invoke() ! {
 		.resize { resize(cmd)! }
 		.extract_audio { extract_audio(cmd)! }
 		.strip_audio { strip_audio(cmd)! }
-		// .join { join(cmd)! }
+		.join { join(cmd)! }
 		else { return error('unsupported function') }
 	}
 }
@@ -147,4 +147,5 @@ fn test_all_media_commands() ! {
 			os.rm(file)!
 		}
 	}
+	cleanup_test_data()!
 }

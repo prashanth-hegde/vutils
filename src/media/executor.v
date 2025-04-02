@@ -17,12 +17,25 @@ pub fn run_ffmpeg_command(func FFMpegFunction, input string, output string, reso
 	log.info('operation: ${func} completed in ${time_taken}')
 }
 
+pub fn run_ffmpeg_command2(func FFMpegFunction, replacers map[string]string) ! {
+	start := time.now()
+	log.info('operation: ${func} started')
+	mut raw_cmd := ffmpeg_cmds[func] or { return error('invalid function provided: ${func}') }
+	for k, v in replacers {
+		raw_cmd = raw_cmd.replace(k, v)
+	}
+	execute(raw_cmd)!
+	time_taken := time.since(start)
+	log.info('operation: ${func} completed in ${time_taken}')
+}
+
 enum FFMpegFunction {
 	convert
 	resize
 	extract_audio
 	strip_audio
 	join
+	merge
 }
 
 const ffmpeg_cmds = {
@@ -31,6 +44,7 @@ const ffmpeg_cmds = {
 	.extract_audio:         'ffmpeg -y -hide_banner -nostats -v warning -i "input" -vn -ab 128k -ar 44100 -y "output"'
 	.strip_audio:           'ffmpeg -y -hide_banner -nostats -i "input" -c copy -an "output"'
 	.join:                  'ffmpeg -y -hide_banner -nostats -f concat -safe 0 -i "input" -c copy "output"'
+	.merge:                 'ffmpeg -i "input" -i "input" -c:v copy -c:a aac -shortest "output"'
 }
 
 // ====== Helpers ======
