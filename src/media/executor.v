@@ -44,7 +44,7 @@ const ffmpeg_cmds = {
 	.extract_audio:         'ffmpeg -y -hide_banner -nostats -v warning -i "input" -vn -ab 128k -ar 44100 -y "output"'
 	.strip_audio:           'ffmpeg -y -hide_banner -nostats -i "input" -c copy -an "output"'
 	.join:                  'ffmpeg -y -hide_banner -nostats -f concat -safe 0 -i "input" -c copy "output"'
-	.merge:                 'ffmpeg -i "input" -i "input" -c:v copy -c:a aac -shortest "output"'
+	.merge:                 'ffmpeg -y -hide_banner -nostats -i "video" -i "audio" -c:v copy -c:a aac -shortest "output"'
 }
 
 // ====== Helpers ======

@@ -39,12 +39,11 @@ fn merge(cmd Command) ! {
 	video_file := cmd.flags.get_string('video')!
 	out_file := cmd.flags.get_string('output')!
 
-	start := time.now()
-	merge_cmd := '${ffmpeg} -i "${video_file}" -i "${audio_file}" -c:v copy -c:a aac -shortest "${out_file}"'
-	log.debug(merge_cmd)
-	cmd_out := os.execute(merge_cmd).output
-	log.debug(cmd_out)
-	log.info('finished in ${time.since(start)}')
+	run_ffmpeg_command2(.merge, {
+		'audio': audio_file
+		'video': video_file
+		'output': out_file
+	})!
 }
 
 /// split_on_silence splits an audio file on silence.
