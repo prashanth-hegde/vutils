@@ -1,5 +1,4 @@
 import os
-import time
 import cli { Command }
 import arrays.parallel
 import log
@@ -44,7 +43,6 @@ fn downloads(cmd Command) ! {
 // hls. Examples include where the chunks are encoded as jpg, the m3u8 files
 // are encoded in .txt file etc. Use this
 fn download(cmd Command) ! {
-	check_ffmpeg()!
 	outfile := cmd.flags.get_string('output') or { 'out.mp4' }
 	url := cmd.args[0]
 	loglevel := if cmd.flags.get_bool('verbose') or { false } { 'warning' } else { 'quiet' }

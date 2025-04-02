@@ -1,28 +1,6 @@
 import cli { Command, Flag }
-import os
-import common { Log }
-import log
 
-const logger = &Log{
-	level: .info
-}
 const vid_file_types = ['avi', 'mp4', 'mkv', 'webm', 'mov', 'wmv']
-
-fn set_logger(cmd Command) Log {
-	if cmd.flags.get_bool('verbose') or { false } {
-		(*logger).level = .debug
-	}
-	return *logger
-}
-
-fn set_log_level(level log.Level) {
-	log.use_stdout()
-	log.set_level(level)
-}
-
-fn check_ffmpeg() !string {
-	return os.find_abs_path_of_executable('ffmpeg')
-}
 
 // ============= Command Parser ==================
 
