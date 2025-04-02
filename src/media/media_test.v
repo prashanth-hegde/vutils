@@ -1,12 +1,13 @@
 module main
+
 import os
 import net.http
-import cli { Command, Flag}
+import cli { Command }
 
-struct TestData{
-	name string
-	ext string
-	url string
+struct TestData {
+	name     string
+	ext      string
+	url      string
 	expected string
 }
 
@@ -14,13 +15,13 @@ fn (t TestData) file_name() string {
 	return os.join_path(os.temp_dir(), '${t.name}.${t.ext}')
 }
 
-const test_data := [
-TestData{
-	name: '01_ocean_w_audio',
-	ext: 'mkv',
-	url: 'https://filesamples.com/samples/video/mkv/sample_960x400_ocean_with_audio.mkv',
-	expected: '.mkv'
-}
+const test_data = [
+	TestData{
+		name:     '01_ocean_w_audio'
+		ext:      'mkv'
+		url:      'https://filesamples.com/samples/video/mkv/sample_960x400_ocean_with_audio.mkv'
+		expected: '.mkv'
+	},
 ]
 
 fn setup_test_data() ! {
@@ -56,10 +57,10 @@ fn test_generic_ffmpeg_command() ! {
 
 fn test_split_preserve_quotes() {
 	inputs := [
-		'ffmpeg -y -i "input filename" -c:v libx264 -crf 23 -preset medium -tune stillimage "output 123"'
+		'ffmpeg -y -i "input filename" -c:v libx264 -crf 23 -preset medium -tune stillimage "output 123"',
 	]
 	exp_splits := [
-		13
+		13,
 	]
 
 	for idx, input in inputs {
@@ -69,10 +70,66 @@ fn test_split_preserve_quotes() {
 	}
 }
 
-
-struct FunctionTestData{
-	func fn (cmd Command) !
-	input string
-	output string
+struct FunctionTestData {
+	func           FFMpegFunction
+	input          string
+	output         string
 	expected_files []string
+}
+
+fn (f FunctionTestData) invoke() ! {
+	cmd := Command{
+		args: [f.input]
+	}
+	match f.func {
+		.convert { convert(cmd)! }
+		.resize { resize(cmd)! }
+		.extract_audio { extract_audio(cmd)! }
+		.strip_audio { strip_audio(cmd)! }
+		// .join { join(cmd)! }
+		else { return error('unsupported function') }
+	}
+}
+
+const function_tests = [
+	FunctionTestData{
+		func:           .convert
+		input:          test_data[0].file_name()
+		output:         ''
+		expected_files: [
+			replace_file_extension(append_to_filename(test_data[0].file_name(), 'converted'),
+				'mp4'),
+		]
+	},
+	FunctionTestData{
+		func:           .resize
+		input:          test_data[0].file_name()
+		output:         ''
+		expected_files: [append_to_filename(test_data[0].file_name(), 'resized')]
+	},
+	FunctionTestData{
+		func:           .extract_audio
+		input:          test_data[0].file_name()
+		output:         ''
+		expected_files: [
+			replace_file_extension(test_data[0].file_name(), 'mp3'),
+		]
+	},
+	FunctionTestData{
+		func:           .strip_audio
+		input:          test_data[0].file_name()
+		output:         ''
+		expected_files: [append_to_filename(test_data[0].file_name(), 'noaudio')]
+	},
+]
+
+fn test_all_media_commands() ! {
+	setup_test_data()!
+	for test in function_tests {
+		test.invoke()!
+		for file in test.expected_files {
+			assert os.exists(file), 'case: ${test.func} expected file not found: ${file}'
+			os.rm(file)!
+		}
+	}
 }
