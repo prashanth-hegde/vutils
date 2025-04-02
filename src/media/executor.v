@@ -2,21 +2,6 @@ import os
 import time
 import log
 
-pub fn run_ffmpeg_command(func FFMpegFunction, input string, output string, resolution ?string) ! {
-	start := time.now()
-	log.info('operation: ${func} started')
-	run_cmd := ffmpeg_cmds[func] or { return error('invalid command: ${func}') }
-	mut raw_cmd := run_cmd
-		.replace('input', input)
-		.replace('output', output)
-	if resolution != none {
-		raw_cmd = raw_cmd.replace('resolution', resolution)
-	}
-	execute(raw_cmd)!
-	time_taken := time.since(start)
-	log.info('operation: ${func} completed in ${time_taken}')
-}
-
 pub fn run_ffmpeg_command2(func FFMpegFunction, replacers map[string]string) ! {
 	start := time.now()
 	log.info('operation: ${func} started')
@@ -37,6 +22,7 @@ enum FFMpegFunction {
 	join
 	merge
 	split_on_silence
+	split_video
 }
 
 const ffmpeg_cmds = {
@@ -47,6 +33,7 @@ const ffmpeg_cmds = {
 	.join:                  'ffmpeg -y -hide_banner -nostats -f concat -safe 0 -i "input" -c copy "output"'
 	.merge:                 'ffmpeg -y -hide_banner -nostats -i "video" -i "audio" -c:v copy -c:a aac -shortest "output"'
 	.split_on_silence:        'ffmpeg -v warning -i "input" -f segment -segment_times "segments" -reset_timestamps 1 -map 0:a -c:a copy "output-%02d.mp3"'
+	.split_video: 				 'ffmpeg -i "input" -ss "start" -to "end" -c copy "output"'
 
 }
 

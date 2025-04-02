@@ -118,8 +118,6 @@ fn split_on_silence(cmd Command) ! {
 // output_file_name1.mp4 | chunk_start | chunk_end
 // output_file_name2.mp4 | chunk_start | chunk_end
 fn split_video(cmd Command) ! {
-	ffmpeg := check_ffmpeg()!
-	// mut log := set_logger(cmd)
 	splits := cmd.args[0]
 	infile := cmd.args[1]
 	if !os.exists(splits) {
@@ -135,14 +133,12 @@ fn split_video(cmd Command) ! {
 			continue
 		}
 		outfile, start, end := tokens[0].trim_space(), tokens[1].trim_space(), tokens[2].trim_space()
-		start_time := time.now()
-		cmd_ := '${ffmpeg} -i "${infile}" -ss "${start}" -to "${end}" -c copy "${outfile}"'
-		log.debug(cmd_)
-		os.execute_opt(cmd_) or {
-			log.error('failed to split ${infile} to ${outfile}')
-			log.error('===\n${err}\n===')
-			continue
-		}
-		log.info('finished splitting to ${outfile} in ${time.since(start_time)}')
+
+		run_ffmpeg_command2(.split_video, {
+			'input':  infile
+			'output': outfile
+			'start':  start
+			'end':    end
+		})!
 	}
 }
