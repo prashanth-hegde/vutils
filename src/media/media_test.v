@@ -1,6 +1,7 @@
 module main
 import os
 import net.http
+import cli { Command, Flag}
 
 struct TestData{
 	name string
@@ -47,17 +48,18 @@ fn test_generic_ffmpeg_command() ! {
 
 		run_ffmpeg_command(.convert, input_filename, output_filename)!
 		assert os.exists(output_filename)
+		os.rm(output_filename)!
 	}
 
-	cleanup_test_data()!
+	// cleanup_test_data()!
 }
 
-fn ignore_test_split_preserve_quotes() {
+fn test_split_preserve_quotes() {
 	inputs := [
 		'ffmpeg -y -i "input filename" -c:v libx264 -crf 23 -preset medium -tune stillimage "output 123"'
 	]
 	exp_splits := [
-		12
+		13
 	]
 
 	for idx, input in inputs {
@@ -65,4 +67,12 @@ fn ignore_test_split_preserve_quotes() {
 		println(res)
 		assert res.len == exp_splits[idx]
 	}
+}
+
+
+struct FunctionTestData{
+	func fn (cmd Command) !
+	input string
+	output string
+	expected_files []string
 }

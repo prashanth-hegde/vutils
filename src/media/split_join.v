@@ -5,32 +5,24 @@ import io.util
 import log
 
 fn join(cmd Command) ! {
-	ffmpeg := check_ffmpeg()!
-	// mut log := set_logger(cmd)
+	if cmd.flags.get_bool('verbose') or { false } {
+		log.set_level(.debug)
+	}
+
 	// For example, ffmpeg -i "concat:video1.mp4|video2.mp4|video3.mp4" -c copy output.mp4
 	if cmd.args.all(it.ends_with('.mp4')) || cmd.args.all(it.ends_with('.mp3')) {
-		log.info('concatenating files')
-		start := time.now()
-
 		mut tmp_file, tmp_path := util.temp_file()!
-		log.debug('tmp created in ${tmp_path}')
+		log.info('tmp created in ${tmp_path}')
 		defer {
 			// delete temp file after exiting
+			tmp_file.close()
 			os.rm(tmp_path) or { log.error('unable to delete tmp file ${tmp_path}') }
 		}
-		for line in cmd.args {
-			abs_path := os.abs_path(line)
-			tmp_file.writeln("file '${abs_path}'")!
-		}
-		tmp_file.close()
+
+		file_lines := cmd.args.map('file $it') // no quotes around $it
+		os.write_lines(tmp_path, file_lines)!
 		outfile := cmd.flags.get_string('output') or { 'output.mp4' }
-		if os.exists(outfile) {
-			os.rm(outfile)!
-		}
-		cat_cmd := '${ffmpeg} -f concat -safe 0 -i ${tmp_path} -c copy ${outfile}'
-		log.debug(cat_cmd)
-		os.execute_opt(cat_cmd)!
-		log.info('finished in ${time.since(start)}')
+		run_ffmpeg_command(.join, tmp_path, outfile)!
 	} else {
 		return error('not all files are of the expected mp3,mp4 types, use merge to combine audio/video or concat to concat files')
 	}

@@ -19,13 +19,15 @@ enum FFMpegFunction {
 	resize
 	extract_audio
 	strip_audio
+	join
 }
 
 const ffmpeg_cmds = {
 	FFMpegFunction.convert: 'ffmpeg -y -loglevel warning -hide_banner -i "input" -c:v libx264 -crf 23 -preset medium -tune stillimage "output"'
 	.resize:                'ffmpeg -y -loglevel warning -hide_banner -i "input" -vf "scale=trunc((iw/ih)*resolution/2)*2:resolution" -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 128k "output"'
 	.extract_audio:         'ffmpeg -y -hide_banner -nostats -v warning -i "input" -vn -ab 128k -ar 44100 -y "output"'
-	.strip_audio: 				 'ffmpeg -y -hide_banner -nostats -i "input" -c copy -an "output"'
+	.strip_audio:           'ffmpeg -y -hide_banner -nostats -i "input" -c copy -an "output"'
+	.join:                  'ffmpeg -y -hide_banner -nostats -f concat -safe 0 -i "input" -c copy "output"'
 }
 
 // ====== Helpers ======
