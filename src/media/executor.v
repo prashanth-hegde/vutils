@@ -2,13 +2,16 @@ import os
 import time
 import log
 
-pub fn run_ffmpeg_command(func FFMpegFunction, input string, output string) ! {
+pub fn run_ffmpeg_command(func FFMpegFunction, input string, output string, resolution ?string) ! {
 	start := time.now()
 	log.info('operation: ${func} started')
 	run_cmd := ffmpeg_cmds[func] or { return error('invalid command: ${func}') }
-	raw_cmd := run_cmd
+	mut raw_cmd := run_cmd
 		.replace('input', input)
 		.replace('output', output)
+	if resolution != none {
+		raw_cmd = raw_cmd.replace('resolution', resolution)
+	}
 	execute(raw_cmd)!
 	time_taken := time.since(start)
 	log.info('operation: ${func} completed in ${time_taken}')

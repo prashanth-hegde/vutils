@@ -22,7 +22,7 @@ fn extract_audio(cmd Command) ! {
 	log.info('converting ${videos.len} videos...')
 	for input in videos {
 		output := replace_file_extension(input, 'mp3')
-		run_ffmpeg_command(.extract_audio, input, output)!
+		run_ffmpeg_command(.extract_audio, input, output, none)!
 	}
 }
 
@@ -40,6 +40,6 @@ fn strip_audio(cmd Command) ! {
 
 	for input in all_files_list {
 		output := append_to_filename(input, 'noaudio')
-		run_ffmpeg_command(.strip_audio, input, output)!
+		run_ffmpeg_command(.strip_audio, input, output, none)!
 	}
 }

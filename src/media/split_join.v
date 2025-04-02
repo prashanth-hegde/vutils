@@ -22,7 +22,7 @@ fn join(cmd Command) ! {
 		file_lines := cmd.args.map('file $it') // no quotes around $it
 		os.write_lines(tmp_path, file_lines)!
 		outfile := cmd.flags.get_string('output') or { 'output.mp4' }
-		run_ffmpeg_command(.join, tmp_path, outfile)!
+		run_ffmpeg_command(.join, tmp_path, outfile, none)!
 	} else {
 		return error('not all files are of the expected mp3,mp4 types, use merge to combine audio/video or concat to concat files')
 	}

@@ -59,7 +59,7 @@ fn test_generic_ffmpeg_command() ! {
 		input_filename := data.file_name()
 		output_filename := append_to_filename(input_filename, 'converted')
 
-		run_ffmpeg_command(.convert, input_filename, output_filename)!
+		run_ffmpeg_command(.convert, input_filename, output_filename, none)!
 		assert os.exists(output_filename)
 		os.rm(output_filename)!
 	}
