@@ -36,7 +36,7 @@ v ${COMP_FLAGS} -o bin/paths $PWD/src/utils/paths.v
 v ${COMP_FLAGS} -o bin/filecache $PWD/src/filecache
 v ${COMP_FLAGS} -o bin/nerdfont $PWD/src/nerdfont
 v ${COMP_FLAGS} -o bin/organize $PWD/src/organize
-v ${COMP_FLAGS} -o bin/goto $PWD/src/goto
+v ${COMP_FLAGS} -o bin/bookmark $PWD/src/bookmark
 v ${COMP_FLAGS} -o bin/docgen $PWD/src/docgen
 
 tar -czvf bin.tgz bin/*

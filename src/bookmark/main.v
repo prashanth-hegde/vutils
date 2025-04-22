@@ -1,11 +1,11 @@
-import cli { Command }
+import cli { Command, Flag }
 import os
 import json
 
 const config_path = os.join_path(os.home_dir(), '.config', 'goto.json')
 
 fn cmd_parser() {
-	mut config := json.decode([]Goto, os.read_file(config_path) or { '[]' }) or { []Goto{} }
+	mut config := json.decode([]Bookmark, os.read_file(config_path) or { '[]' }) or { []Bookmark{} }
 
 	mut main_cmd := Command{
 		name:          'goto'
@@ -13,7 +13,8 @@ fn cmd_parser() {
 		version:       '0.0.1'
 		required_args: 1
 		execute:       fn [config] (cmd Command) ! {
-			config.goto(cmd.args[0])!
+			path := config.goto(cmd.args[0])!
+			println(path)
 		}
 		commands:      [
 			Command{
@@ -30,11 +31,24 @@ fn cmd_parser() {
 				name:          'ls'
 				description:   'List all the bookmarked directories'
 				required_args: 0
+				flags:         [
+					Flag{
+						name:        'short'
+						abbrev:      's'
+						description: 'print only (short) names of the shortcuts'
+						flag:        .bool
+					},
+				]
 				execute:       fn [mut config] (cmd Command) ! {
+					short := cmd.flags.get_bool('short') or { false }
 					nm := 'name'
-					println('${nm:15} | path')
-					for c in config {
-						println('${c.name:15} | ${c.path}')
+					if short {
+						println(config.map(it.name).join('\n'))
+					} else {
+						println('${nm:15} | path')
+						for c in config {
+							println('${c.name:15} | ${c.path}')
+						}
 					}
 				}
 			},
@@ -56,6 +70,28 @@ fn cmd_parser() {
 				required_args: 0
 				execute:       fn [mut config] (cmd Command) ! {
 					config.clean()!
+				}
+			},
+			Command{
+				name:          'setup'
+				description:   'Shell completion scripts'
+				required_args: 0
+				flags:         [
+					Flag{
+						name:        'shell'
+						abbrev:      's'
+						description: 'Setup scripts for shell'
+						flag:        .string
+						required:    true
+					},
+				]
+				execute:       fn (cmd Command) ! {
+					shell := cmd.flags.get_string('shell') or { 'fish' }
+					embed_data := match shell {
+						'fish' { $embed_file('setup.fish') }
+						else { $embed_file('setup.fish') }
+					}
+					println(embed_data.to_string())
 				}
 			},
 		]

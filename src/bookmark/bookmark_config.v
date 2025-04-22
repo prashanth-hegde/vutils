@@ -1,26 +1,26 @@
 import os
 import json
 
-struct Goto {
+struct Bookmark {
 	name string
 	path string
 }
 
-fn (g []Goto) save() ! {
-	mut config_file := os.home_dir() + '/.config/goto.json'
+fn (g []Bookmark) save() ! {
+	mut config_file := os.join_path(os.home_dir(), '.config', 'goto.json')
 	encoded_config := json.encode(g)
 	os.write_file(config_file, encoded_config)!
 }
 
-fn (mut g []Goto) add(name string, path string) ! {
-	g << Goto{
+fn (mut g []Bookmark) add(name string, path string) ! {
+	g << Bookmark{
 		name: name
 		path: path
 	}
 	g.save()!
 }
 
-fn (mut g []Goto) remove_path(path string) ! {
+fn (mut g []Bookmark) remove_path(path string) ! {
 	for i, j in g {
 		if j.path == path {
 			g.delete(i)
@@ -30,7 +30,7 @@ fn (mut g []Goto) remove_path(path string) ! {
 	g.save()!
 }
 
-fn (mut g []Goto) remove_name(name string) ! {
+fn (mut g []Bookmark) remove_name(name string) ! {
 	for i, j in g {
 		if j.name == name {
 			g.delete(i)
@@ -40,7 +40,7 @@ fn (mut g []Goto) remove_name(name string) ! {
 	g.save()!
 }
 
-fn (mut g []Goto) clean() ! {
+fn (mut g []Bookmark) clean() ! {
 	// remove non-existent paths
 	for i, j in g {
 		if !os.exists(j.path) {
@@ -54,34 +54,30 @@ fn (mut g []Goto) clean() ! {
 		seen_paths[i.path] = false
 	}
 
-	mut unique_gotos := []Goto{}
+	mut unique_bookmarks := []Bookmark{}
 	for i in g {
 		if seen_paths[i.path] == false {
-			unique_gotos << i
+			unique_bookmarks << i
 			seen_paths[i.path] = true
 		}
 	}
-	unique_gotos.save()!
+	unique_bookmarks.save()!
 }
 
-fn (g []Goto) goto(key string) ! {
-	shell_path := os.find_abs_path_of_executable('bash') or {
-		os.find_abs_path_of_executable('sh')!
-	}
-
+fn (g []Bookmark) goto(key string) !string {
 	// first preference goes to keys
 	for i in g {
 		if key.to_lower() == i.name.to_lower() || i.name.to_lower().contains(key.to_lower()) {
-			os.system('$shell_path -c "cd \"${i.path}\" && exec \$SHELL"')
-			return
+			return i.path
 		}
 	}
 
 	// if keys not found, search in paths
 	for i in g {
 		if i.path.to_lower().contains(key.to_lower()) {
-			os.system('$shell_path -c "cd \"${i.path}\" && exec \$SHELL"')
-			return
+			return i.path
 		}
 	}
+
+	return error('path not found')
 }
