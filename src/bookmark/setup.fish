@@ -3,6 +3,7 @@ set __goto_subcommands ls add rm clean
 function goto --description "navigate to the configured bookmarks"
 	# if bookmark binary is not installed, return
 	if ! command -v bookmark &> /dev/null
+		echo "bookmark binary is not installed..."
 		return
 	end
 

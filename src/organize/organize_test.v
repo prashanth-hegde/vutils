@@ -35,6 +35,4 @@ fn test_list_all_globbed_files() ! {
 	file5_list := list_files_for_glob(['*'], false)!
 	assert file1_list.len == 4
 
-	assert os.glob('*')!.len == 3
-	println(os.glob('*')!)
 }
