@@ -1,15 +1,55 @@
 #!/usr/bin/env bash
 
-# set -x
+V_VERSION="0.4.12"
+V_BASE_URL="https://github.com/vlang/v/releases/download/${V_VERSION}"
+V_INSTALL_DIR="${HOME}/apps/v"
 
-# if command v is not present
-if ! command -v v > /dev/null 2>&1; then
-  git clone --depth 1 --branch master https://github.com/vlang/v.git
-  cd v
-  make
-  ./v symlink
-  cd ..
-fi
+ensure_v() {
+  # Prefer a pinned V installation in $HOME/apps/v
+  if [ -x "${V_INSTALL_DIR}/v" ]; then
+    export PATH="${V_INSTALL_DIR}:${PATH}"
+    return
+  fi
+
+  # Fall back to system v if present
+  if command -v v >/dev/null 2>&1; then
+    return
+  fi
+
+  echo "V not found; downloading ${V_VERSION}..."
+  mkdir -p "${V_INSTALL_DIR}"
+
+  arch="$(uname -m)"
+  os_name="$(uname -s)"
+  case "${os_name}" in
+    Darwin)
+      case "${arch}" in
+        x86_64|amd64) archive_name="v_macos_x86_64.zip" ;;
+        arm64|aarch64) archive_name="v_macos_arm64.zip" ;;
+        *) echo "Unsupported macOS architecture: ${arch}" >&2; exit 1 ;;
+      esac
+      ;;
+    Linux)
+      case "${arch}" in
+        x86_64|amd64) archive_name="v_linux.zip" ;;
+        arm64|aarch64) archive_name="v_linux_arm64.zip" ;;
+        *) echo "Unsupported Linux architecture: ${arch}" >&2; exit 1 ;;
+      esac
+      ;;
+    *)
+      echo "Unsupported OS: ${os_name}" >&2
+      exit 1
+      ;;
+  esac
+
+  archive_path="/tmp/${archive_name}"
+  curl -L "${V_BASE_URL}/${archive_name}" -o "${archive_path}"
+  unzip -o "${archive_path}" -d "${V_INSTALL_DIR}"
+  rm -f "${archive_path}"
+  export PATH="${V_INSTALL_DIR}:${PATH}"
+}
+
+ensure_v
 
 # Build the projects
 if [ ! -d bin ]; then
