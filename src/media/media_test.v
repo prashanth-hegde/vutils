@@ -4,6 +4,10 @@ import os
 import net.http
 import cli { Command }
 
+fn ffmpeg_available() bool {
+	return os.find_abs_path_of_executable('ffmpeg') or { '' } != ''
+}
+
 struct TestData {
 	name     string
 	ext      string
@@ -53,6 +57,10 @@ fn cleanup_test_data() ! {
 }
 
 fn test_generic_ffmpeg_command() ! {
+	if !ffmpeg_available() {
+		eprintln('skipping media tests: ffmpeg not found')
+		return
+	}
 	setup_test_data()!
 
 	for data in test_data {
@@ -142,6 +150,10 @@ const function_tests = [
 ]
 
 fn test_all_media_commands() ! {
+	if !ffmpeg_available() {
+		eprintln('skipping media tests: ffmpeg not found')
+		return
+	}
 	setup_test_data()!
 	for test in function_tests {
 		test.invoke()!

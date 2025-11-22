@@ -21,6 +21,10 @@ const apps = {
 }
 
 fn test_downloader() {
+	if os.getenv_opt('RUN_NETWORK_TESTS') or { '' } == '' {
+		eprintln('skipping network tests: set RUN_NETWORK_TESTS=1 to enable')
+		return
+	}
 	for k, v in apps {
 		asset := get_asset_for_repo(v) or {
 			assert false, 'failed to get asset for ${k}: ${err}'
