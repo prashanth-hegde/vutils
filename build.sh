@@ -6,9 +6,18 @@ V_BASE_URL="https://github.com/vlang/v/releases/download/${V_VERSION}"
 V_INSTALL_DIR="${HOME}/apps/v"
 
 ensure_v() {
-  # Prefer a pinned V installation in $HOME/apps/v
-  if [ -x "${V_INSTALL_DIR}/v" ]; then
-    export PATH="${V_INSTALL_DIR}:${PATH}"
+  local v_bin_dir=""
+
+  # Prefer a pinned V installation in $HOME/apps/v. The official
+  # release zips unpack into $V_INSTALL_DIR/v, so handle both layouts.
+  if [ -f "${V_INSTALL_DIR}/v" ] && [ -x "${V_INSTALL_DIR}/v" ]; then
+    v_bin_dir="${V_INSTALL_DIR}"
+  elif [ -f "${V_INSTALL_DIR}/v/v" ] && [ -x "${V_INSTALL_DIR}/v/v" ]; then
+    v_bin_dir="${V_INSTALL_DIR}/v"
+  fi
+
+  if [ -n "${v_bin_dir}" ]; then
+    export PATH="${v_bin_dir}:${PATH}"
     return
   fi
 
@@ -52,8 +61,17 @@ ensure_v() {
   curl -fSLo "${archive_path}" "${V_BASE_URL}/${archive_name}"
   unzip -o "${archive_path}" -d "${V_INSTALL_DIR}"
   rm -f "${archive_path}"
-  export PATH="${V_INSTALL_DIR}:${PATH}"
-  ${V_INSTALL_DIR}/v symlink
+
+  if [ -f "${V_INSTALL_DIR}/v/v" ] && [ -x "${V_INSTALL_DIR}/v/v" ]; then
+    v_bin_dir="${V_INSTALL_DIR}/v"
+  elif [ -f "${V_INSTALL_DIR}/v" ] && [ -x "${V_INSTALL_DIR}/v" ]; then
+    v_bin_dir="${V_INSTALL_DIR}"
+  else
+    echo "V install missing 'v' executable after unzip" >&2
+    exit 1
+  fi
+
+  export PATH="${v_bin_dir}:${PATH}"
 }
 
 ensure_v
