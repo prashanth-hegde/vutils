@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 V_VERSION="0.4.12"
 V_BASE_URL="https://github.com/vlang/v/releases/download/${V_VERSION}"
@@ -43,13 +44,27 @@ ensure_v() {
   esac
 
   archive_path="/tmp/${archive_name}"
-  curl -L "${V_BASE_URL}/${archive_name}" -o "${archive_path}"
+  if ! command -v unzip >/dev/null 2>&1; then
+    echo "unzip is required to install V" >&2
+    exit 1
+  fi
+
+  curl -fSLo "${archive_path}" "${V_BASE_URL}/${archive_name}"
   unzip -o "${archive_path}" -d "${V_INSTALL_DIR}"
   rm -f "${archive_path}"
   export PATH="${V_INSTALL_DIR}:${PATH}"
 }
 
 ensure_v
+
+# Avoid interactive prompts from V in CI/non-interactive shells
+export VPM_AUTOINSTALL=${VPM_AUTOINSTALL:-yes}
+export CI=${CI:-1}
+
+if ! command -v v >/dev/null 2>&1; then
+  echo "v compiler not available after install attempt" >&2
+  exit 1
+fi
 
 # Build the projects
 if [ ! -d bin ]; then
