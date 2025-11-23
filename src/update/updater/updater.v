@@ -17,6 +17,7 @@ const apps = {
 	'aichat':     'sigoden/aichat'
 	'procs':      'dalance/procs'
 	'gum':        'charmbracelet/gum'
+	'ls':         'Equationzhao/g'
 }
 
 pub fn update_all(appnames []string)! {
