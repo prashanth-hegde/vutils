@@ -53,6 +53,7 @@ ensure_v() {
   unzip -o "${archive_path}" -d "${V_INSTALL_DIR}"
   rm -f "${archive_path}"
   export PATH="${V_INSTALL_DIR}:${PATH}"
+  ${V_INSTALL_DIR}/v symlink
 }
 
 ensure_v
